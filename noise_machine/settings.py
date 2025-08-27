@@ -15,7 +15,7 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 
-load_dotenv() # load variables from .env
+load_dotenv()  # load variables from .env
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -39,7 +39,8 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'https://noise-machine-74f044719326.herokuapp.com'
+    'noise-machine-74f044719326.herokuapp.com',
+    '127.0.0.1',
 ]
 
 # CSRF Verification
@@ -104,23 +105,33 @@ DATABASES = {
    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'UserAttributeSimilarityValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'MinimumLengthValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'CommonPasswordValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'NumericPasswordValidator'
+        ),
     },
 ]
 
