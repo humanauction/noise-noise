@@ -40,3 +40,24 @@ coverage.xml
 *.swp
 *.swo
 *.tmp
+
+# pipenv
+Pipfile.lock
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# Pytest
+.cache/
+
+# PyCharm
+.idea/
+
+# System files
+Thumbs.db
+Desktop.ini
+
+# dotenv
+.env
+.env.*
