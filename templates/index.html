@@ -25,9 +25,11 @@
 
         {% block extra_js %}{% endblock %}
     </head>
-    <body>
+    <body class="flex flex-col min-h-screen">
         <!-- Navbar -->
-        <nav class="navbar mb-auto flex justify-between items-center">
+        <nav
+            class="navbar bg-base-200 px-4 py-2 flex justify-between items-center"
+        >
             <div class="flex items-center space-x-4">
                 <a
                     href="{% url 'selector:home' %}"
@@ -44,12 +46,12 @@
                 />
             </div>
         </nav>
-        <main class="container mx-auto mt-6">
+        <main class="flex-1 container mx-auto px-4 py-6">
             <h1>are we there yet?</h1>
             {% block content %} {% endblock %}
         </main>
         <!-- Footer -->
-        <footer class="footer footer-horizontal footer-center mt-auto">
+        <footer class="bg-base-200 py-4 mt-auto">
             <div class="flex justify-center space-x-8">
                 <a href="#" rel="noopener" class="text-blue-600 text-xl"
                     ><i class="fa-brands fa-facebook"></i
@@ -57,7 +59,7 @@
                 <a href="#" rel="noopener" class="text-green-600 text-xl"
                     ><i class="fa-brands fa-spotify"></i
                 ></a>
-                <a href="#" rel="noopener" class="text-black-800 text-xl"
+                <a href="#" rel="noopener" class="text-black text-xl"
                     ><i class="fa-brands fa-x-twitter"></i
                 ></a>
             </div>

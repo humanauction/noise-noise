@@ -1,36 +1,135 @@
-{% extends 'index.html' %}
-{% load static %}
-{% block content %}
-<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+{% extends 'index.html' %} {% load static %} {% block content %}
+<div
+    class="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-9 xl:grid-cols-12 gap-4 md:gap-6"
+>
     {% for color in colors %}
-    <div class="card w-full bg-base-100 shadow-xl transform hover:rotate-y-180 duration-500 perspective">
-        <div class="card-face card-front bg-{{ color }}-500 h-40 flex items-center justify-center text-white">
-            {{ color|capfirst }} Noise
-        </div>
-        <div class="card-face card-back bg-white h-40 p-4 flex flex-col justify-center items-center">
-            <audio id="audio-{{ color }}" src="{% static 'audio/'|add:color|add:'.wav' %}"></audio>
-        </div>
-        <div class="flex space-x-2 mb-2">
-            <button onclick="play('{{color}}')" class="btn btn-sm">Play</button>
-            <button onclick="pause('{{color}}')" class="btn btn-sm">Pause</button>
-            <button onclick="loop('{{color}}')" class="btn btn-sm">Loop</button>
+    <div
+        class="card bg-{{ color }}-500 text-white w-full h-64 cursor-pointer transform transition-transform duration-300 hover:scale-105"
+        onclick="flipCard('{{ color }}')"
+    >
+        <div class="card-body p-4 flex flex-col justify-between">
+            <div class="flex-1 flex items-center justify-center">
+                <h2 class="card-title text-xl font-bold text-center">
+                    {{ color|capfirst }} Noise
+                </h2>
             </div>
-            <input type="range" min="0" max="1" step="0.01" onchange="setVolume('{{color}}', this.value)" class="w-full">
+
+            <!-- Hidden controls (shown when card is flipped) -->
+            <div id="controls-{{ color }}" class="card-controls hidden">
+                <audio
+                    id="audio-{{ color }}"
+                    src="{% static 'audio/'|add:color|add:'.wav' %}"
+                ></audio>
+
+                <!-- Control buttons -->
+                <div class="card-actions justify-center mb-4">
+                    <button
+                        onclick="event.stopPropagation(); play('{{color}}')"
+                        class="btn btn-circle btn-sm btn-primary"
+                        title="Play"
+                    >
+                        <i class="fas fa-play text-xs"></i>
+                    </button>
+                    <button
+                        onclick="event.stopPropagation(); pause('{{color}}')"
+                        class="btn btn-circle btn-sm btn-warning"
+                        title="Pause"
+                    >
+                        <i class="fas fa-pause text-xs"></i>
+                    </button>
+                    <button
+                        onclick="event.stopPropagation(); toggleLoop('{{color}}')"
+                        class="btn btn-circle btn-sm btn-secondary"
+                        title="Loop"
+                        id="loop-btn-{{color}}"
+                    >
+                        <i class="fas fa-repeat text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Volume control -->
+                <div class="w-full">
+                    <label class="text-xs opacity-80 mb-2 block">Volume</label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value="0.5"
+                        onchange="setVolume('{{color}}', this.value)"
+                        class="range range-xs w-full"
+                    />
+                </div>
+            </div>
+
+            <!-- Click indicator when not flipped -->
+            <div id="indicator-{{ color }}" class="card-actions justify-end">
+                <span class="text-xs opacity-80">Click to control</span>
+            </div>
         </div>
     </div>
     {% endfor %}
 </div>
-{% endblock %}
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
-    function play(c){document.getElementById(`audio-${c}`).play();}
-    function pause(c){document.getElementById(`audio-${c}`).pause();}
-    function loop(c){
-        let a=document.getElementById(`audio-${c}`);
-        a.loop=!a.loop;
+    // Track flipped state and loop state
+    const flippedCards = new Set();
+    const loopStates = {};
+
+    function flipCard(color) {
+        const controls = document.getElementById(`controls-${color}`);
+        const indicator = document.getElementById(`indicator-${color}`);
+
+        if (flippedCards.has(color)) {
+            // Flip back to title view
+            controls.classList.remove('show');
+            controls.classList.add('hidden');
+            indicator.classList.remove('hide');
+            flippedCards.delete(color);
+        } else {
+            // Flip to controls view
+            controls.classList.remove('hidden');
+            controls.classList.add('show');
+            indicator.classList.add('hide');
+            flippedCards.add(color);
+        }
     }
-    function setVolume(c,v){
-        document.getElementById(`audio-${c}`).volume=v;
+
+    function play(color) {
+        const audio = document.getElementById(`audio-${color}`);
+        audio.play().catch(e => console.log('Audio play failed:', e));
     }
+
+    function pause(color) {
+        const audio = document.getElementById(`audio-${color}`);
+        audio.pause();
+    }
+
+    function toggleLoop(color) {
+        const audio = document.getElementById(`audio-${color}`);
+        const loopBtn = document.getElementById(`loop-btn-${color}`);
+
+        audio.loop = !audio.loop;
+        loopStates[color] = audio.loop;
+
+        // Update button appearance
+        if (audio.loop) {
+            loopBtn.classList.add('btn-active');
+        } else {
+            loopBtn.classList.remove('btn-active');
+        }
+    }
+
+    function setVolume(color, volume) {
+        const audio = document.getElementById(`audio-${color}`);
+        audio.volume = volume;
+    }
+
+    // Initialize volume for all audio elements
+    document.addEventListener('DOMContentLoaded', function() {
+        {% for color in colors %}
+        setVolume('{{ color }}', 0.5);
+        {% endfor %}
+    });
 </script>
 {% endblock %}
