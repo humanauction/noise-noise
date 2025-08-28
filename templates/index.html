@@ -21,7 +21,33 @@
         ></button>
     </head>
     <body>
-        <h1>are we there yet?</h1>
-        {% block content %} {% endblock %}
+        <!-- Navbar -->
+        <nav
+            class="navbar bg-base-200 px-4 py-2 flex justify-between items-center"
+        >
+            <div class="flex items-center space-x-4">
+                <a
+                    href="{% url 'selector:home' %}"
+                    class="btn btn-ghost normal-case text-xl"
+                    >Home</a
+                >
+                <a href="{% url 'selector:selector' %}" class="btn btn-ghost"
+                    >Selector</a
+                >
+            </div>
+            <div>
+                <button
+                    data-toggle-theme="dark,light"
+                    data-act-class="ACTIVECLASS"
+                    class="btn btn-sm"
+                >
+                    Theme
+                </button>
+            </div>
+        </nav>
+        <main class="container mx-auto mt-6">
+            <h1>are we there yet?</h1>
+            {% block content %} {% endblock %}
+        </main>
     </body>
 </html>
