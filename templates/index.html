@@ -6,13 +6,22 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Django-Setup</title>
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+        {% block extra_js %}{% endblock %}
         <button
             data-toggle-theme="dark,light"
             data-act-class="ACTIVECLASS"
         ></button>
-        <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
     </head>
     <body>
-        <h1>but is this important?</h1>
+        <h1>are we there yet?</h1>
+        {% block content %} {% endblock %}
     </body>
 </html>

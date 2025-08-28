@@ -54,6 +54,14 @@ Pipfile.lock
 # PyCharm
 .idea/
 
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
 # System files
 Thumbs.db
 Desktop.ini

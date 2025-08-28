@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "theme-change": "^2.5.0"
+  },
+  "devDependencies": {
+    "daisyui": "^5.0.54"
   }
 }

@@ -3,6 +3,12 @@ import soundfile as sf
 from scipy import signal
 
 
+def generate_white_noise(filename, duration=5.0, sample_rate=44100):
+    """ generate white noise and save to file """
+    samples = np.random.normal(0, 0.3, int(sample_rate * duration))
+    sf.write(filename, samples, sample_rate)
+
+
 def _colored_noise(beta, n, sample_rate):
     """
     generate colored noise with Proportional Spectral Density
