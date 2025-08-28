@@ -1,0 +1,40 @@
+<!-- selector/templates/selector/selector.html -->
+{% load static %}
+
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+</head>
+<body class="bg-gray-11 p-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {% for color in colors %}
+        <div class="card w-full bg-base-100 shadow-xl transform hover:rotate-y-180 duration-500 perspective">
+            <div class="card-face card-front bg-{{ color }}-500 h-40 flex items-center justify-center text-white">
+                {{ color|capfirst }} Noise
+            </div>
+            <div class="card-face card-back bg-white h-40 p-4 flex flex-col justify-center items-center">
+                <audio id="audio-{{ color }}" src="{% static 'noise/'|add:color|add:'.wav' %}"></audio>
+            </div>
+            <div class="flex space-x-2 mb-2">
+                <button onclick="play('{{color}}')" class="btn btn-sm">Play</button>
+                <button onclick="pause('{{color}}')" class="btn btn-sm">Pause</button>
+                <button onclick="loop('{{color}}')" class="btn btn-sm">Loop</button>
+                </div>
+                <input type="range" min="0" max="1" step="0.01" onchange="setVolume('{{color}}', this.value)" class="w-full">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        function play(c){document.getElementById(`audio-${c}`).play();}
+        function pause(c){document.getElementById(`audio-${c}`).pause();}
+        function loop(c){
+            let a=document.getElementById(`audio-${c}`);
+            a.loop=!a.loop;
+        }
+        function setVolume(c,v){
+            document.getElementById(`audio-${c}`).volume=v;
+        }
+    </script>
+</body>
+</html>
