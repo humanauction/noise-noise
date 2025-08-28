@@ -15,10 +15,6 @@
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
         {% block extra_js %}{% endblock %}
-        <button
-            data-toggle-theme="dark,light"
-            data-act-class="ACTIVECLASS"
-        ></button>
     </head>
     <body>
         <!-- Navbar -->
@@ -34,20 +30,17 @@
                 <a href="{% url 'selector:selector' %}" class="btn btn-ghost"
                     >Selector</a
                 >
-            </div>
-            <div>
-                <button
-                    data-toggle-theme="dark,light"
-                    data-act-class="ACTIVECLASS"
-                    class="btn btn-sm"
-                >
-                    Theme
-                </button>
+                <input
+                    type="checkbox"
+                    value="synthwave"
+                    class="toggle theme-controller"
+                />
             </div>
         </nav>
         <main class="container mx-auto mt-6">
             <h1>are we there yet?</h1>
             {% block content %} {% endblock %}
         </main>
+        <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
     </body>
 </html>
