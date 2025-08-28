@@ -12,15 +12,22 @@
             rel="stylesheet"
             type="text/css"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+        <link
+            rel="shortcut icon"
+            href="{% static 'images/favicon.ico' %}"
+            type="image/x-icon"
+        />
 
         {% block extra_js %}{% endblock %}
     </head>
     <body>
         <!-- Navbar -->
-        <nav
-            class="navbar bg-base-200 px-4 py-2 flex justify-between items-center"
-        >
+        <nav class="navbar mb-auto flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <a
                     href="{% url 'selector:home' %}"
@@ -41,6 +48,20 @@
             <h1>are we there yet?</h1>
             {% block content %} {% endblock %}
         </main>
+        <!-- Footer -->
+        <footer class="footer footer-horizontal footer-center mt-auto">
+            <div class="flex justify-center space-x-8">
+                <a href="#" rel="noopener" class="text-blue-600 text-xl"
+                    ><i class="fa-brands fa-facebook"></i
+                ></a>
+                <a href="#" rel="noopener" class="text-green-600 text-xl"
+                    ><i class="fa-brands fa-spotify"></i
+                ></a>
+                <a href="#" rel="noopener" class="text-black-800 text-xl"
+                    ><i class="fa-brands fa-x-twitter"></i
+                ></a>
+            </div>
+        </footer>
         <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
     </body>
 </html>
