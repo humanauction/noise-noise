@@ -1,0 +1,29 @@
+/* Card styling */
+.card {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Light border for better visibility on colored backgrounds */
+.card-body {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.card-controls.show {
+    display: block !important;
+}
+.card-indicator.hide {
+    display: none !important;
+}
+/* Theme-aware card hover effect: light/dark dark/light */
+
+.card:hover {
+    background-color: var(--color-base-100) !important;
+    color: var(--color-neutral) !important;
+}
+
+[data-theme="light"] .card:hover,
+html[data-theme-light] .card:hover,
+body[data-theme-light] .card:hover {
+    background-color: var(--color-neutral) !important;
+    color: var(--color-base-100) !important;
+}

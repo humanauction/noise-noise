@@ -48,7 +48,9 @@ function toggleLoop(color) {
 
 function setVolume(color, volume) {
     const audio = document.getElementById(`audio-${color}`);
-    audio.volume = volume;
+    if (audio) {
+        audio.volume = volume;
+    }
 }
 
 // Initialize volume for all audio elements when page loads
