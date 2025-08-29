@@ -1,15 +1,15 @@
 {% extends 'index.html' %} {% load static %} {% block content %}
 <div
-    class="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-9 xl:grid-cols-12 gap-4 md:gap-6"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4"
 >
     {% for color in colors %}
     <div
-        class="card bg-{{ color }}-500 text-white w-full h-64 cursor-pointer transform transition-transform duration-300 hover:scale-105"
+        class="card bg-{{ color }}-500 text-white h-full w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
         onclick="flipCard('{{ color }}')"
     >
-        <div class="card-body p-4 flex flex-col justify-between">
+        <div class="card-body p-4 flex flex-col">
             <div class="flex-1 flex items-center justify-center">
-                <h2 class="card-title text-xl font-bold text-center">
+                <h2 class="card-title text-lg sm:text-xl font-bold text-center">
                     {{ color|capfirst }} Noise
                 </h2>
             </div>
@@ -49,8 +49,13 @@
 
                 <!-- Volume control -->
                 <div class="w-full">
-                    <label class="text-xs opacity-80 mb-2 block">Volume</label>
+                    <label
+                        for="volume-{{ color }}"
+                        class="text-xs opacity-80 mb-2 block"
+                        >Volume</label
+                    >
                     <input
+                        id="volume-{{ color }}"
                         type="range"
                         min="0"
                         max="1"
@@ -71,65 +76,5 @@
     {% endfor %}
 </div>
 {% endblock %} {% block extra_js %}
-<script>
-    // Track flipped state and loop state
-    const flippedCards = new Set();
-    const loopStates = {};
-
-    function flipCard(color) {
-        const controls = document.getElementById(`controls-${color}`);
-        const indicator = document.getElementById(`indicator-${color}`);
-
-        if (flippedCards.has(color)) {
-            // Flip back to title view
-            controls.classList.remove('show');
-            controls.classList.add('hidden');
-            indicator.classList.remove('hide');
-            flippedCards.delete(color);
-        } else {
-            // Flip to controls view
-            controls.classList.remove('hidden');
-            controls.classList.add('show');
-            indicator.classList.add('hide');
-            flippedCards.add(color);
-        }
-    }
-
-    function play(color) {
-        const audio = document.getElementById(`audio-${color}`);
-        audio.play().catch(e => console.log('Audio play failed:', e));
-    }
-
-    function pause(color) {
-        const audio = document.getElementById(`audio-${color}`);
-        audio.pause();
-    }
-
-    function toggleLoop(color) {
-        const audio = document.getElementById(`audio-${color}`);
-        const loopBtn = document.getElementById(`loop-btn-${color}`);
-
-        audio.loop = !audio.loop;
-        loopStates[color] = audio.loop;
-
-        // Update button appearance
-        if (audio.loop) {
-            loopBtn.classList.add('btn-active');
-        } else {
-            loopBtn.classList.remove('btn-active');
-        }
-    }
-
-    function setVolume(color, volume) {
-        const audio = document.getElementById(`audio-${color}`);
-        audio.volume = volume;
-    }
-
-    // Initialize volume for all audio elements
-    document.addEventListener('DOMContentLoaded', function() {
-        {% for color in colors %}
-        setVolume('{{ color }}', 0.5);
-        {% endfor %}
-    });
-</script>
+<script src="{% static 'js/selector.js' %}"></script>
 {% endblock %}
