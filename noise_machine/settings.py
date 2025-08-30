@@ -57,7 +57,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # 3rd party apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    # Local apps
     'selector',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +76,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -160,3 +170,34 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AllAuth settings
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Account settings
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}  # Allow username or email
+ACCOUNT_SIGNUP_FIELDS = [
+    'email*',     # Required email field
+    'username*',  # Required username field
+    'password1*',  # Required password field
+    'password2*',  # Required password confirmation field
+]
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_LOGOUT_ON_GET = False
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# Security settings
+CSRF_COOKIE_SECURE = False  # SET TO FALSE FOR DEVELOPMENT
+# SET TO TRUE FOR PRODUCTION
+SESSION_COOKIE_SECURE = False  # SET TO FALSE FOR DEVELOPMENT
+# SET TO TRUE FOR PRODUCTION
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
