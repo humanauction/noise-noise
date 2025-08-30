@@ -1,3 +1,18 @@
-h1 {
-    color: red;
+/* global styles vars*/
+
+:root {
+    --primary-font: "TASA Orbiter", sans-serif, monospace;
+    --secondary-font: "Roboto", monospace;
+    --accent-font: "Atkinson Hyperlegible", sans-serif, monospace;
+}
+
+*,
+body {
+    font-family: var(--secondary-font);
+    line-height: 1.6;
+}
+
+span,
+nav {
+    font-family: var(--primary-font);
 }

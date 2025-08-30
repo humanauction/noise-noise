@@ -3,6 +3,26 @@
     "theme-change": "^2.5.0"
   },
   "devDependencies": {
-    "daisyui": "^5.0.54"
-  }
+    "daisyui": "^5.0.54",
+    "tailwindcss": "^4.1.12"
+  },
+  "name": "noise-noise",
+  "version": "1.0.0",
+  "description": "noise machine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humanauction/noise-noise.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/humanauction/noise-noise/issues"
+  },
+  "homepage": "https://github.com/humanauction/noise-noise#readme"
 }
