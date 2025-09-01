@@ -48,22 +48,22 @@
             </button>
             <p class="text-center text-sm">
                 Don't have an account?
-                <a href="{% url 'accounts:signup' %}" class="link">Sign up</a>
+                <a href="{% url 'account_signup' %}" class="link">Sign up</a>
             </p>
         </div>
     </div>
 </div>
 
 <script>
+    const csrftoken = getCookie("csrftoken");
+
     document
         .getElementById("guest-access")
         .addEventListener("click", function () {
-            fetch('{% url "accounts:guest_access" %}', {
+            fetch("/accounts/guest/", {
                 method: "POST",
                 headers: {
-                    "X-CSRFToken": document.querySelector(
-                        "[name=csrfmiddlewaretoken]"
-                    ).value,
+                    "X-CSRFToken": csrftoken,
                     "Content-Type": "application/json",
                 },
             })

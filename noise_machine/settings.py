@@ -189,7 +189,7 @@ ACCOUNT_SIGNUP_FIELDS = [
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_LOGOUT_ON_GET = False
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/selector/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Security settings
@@ -201,3 +201,6 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# DEVELOPMENT ONLY: print emails to terminal
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
