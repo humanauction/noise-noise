@@ -1,103 +1,85 @@
 {% extends 'index.html' %} {% load static %} {% block content %}
 <div
-    class="grid h-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4 lg:gap-8"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-6 p-4"
 >
-    {% for color in colors %} {% if color == "white" %}
+    {% for color in colors %}
     <div
-        class="card custom-card bg-white text-black h-60 w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
+        class="card
+                {% if color == 'white' %}bg-white text-black
+                {% elif color == 'brown' %}bg-yellow-900 text-white
+                {% else %}bg-{{ color }}-500 text-white
+                {% endif %}
+                shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer w-full max-w-xs mx-auto"
         onclick="flipCard('{{ color }}')"
     >
-        {% elif color == "brown" %}
-        <div
-            class="card custom-card bg-yellow-900 text-white h-60 w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
-            onclick="flipCard('{{ color }}')"
-        >
-            {% else %}
+        <div class="card-body flex flex-col p-4">
+            <div class="flex-1 flex items-center justify-center">
+                <h2 class="card-title text-lg sm:text-xl font-bold text-center">
+                    {{ color|capfirst }} Noise
+                </h2>
+            </div>
             <div
-                class="card custom-card bg-{{ color }}-500 text-white h-60 w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
-                onclick="flipCard('{{ color }}')"
+                id="controls-{{ color }}"
+                class="card-controls hidden flex flex-col flex-1 justify-center"
             >
-                {% endif %}
-                <div class="card-body p-2 flex flex-col h-60">
-                    <div class="flex-1 flex items-center justify-center">
-                        <h2
-                            class="card-title text-lg sm:text-xl font-bold text-center"
-                        >
-                            {{ color|capfirst }} Noise
-                        </h2>
-                    </div>
-
-                    <!-- Hidden controls (shown when card is flipped) -->
-                    <div
-                        id="controls-{{ color }}"
-                        class="card-controls hidden flex flex-col flex-1 justify-center"
+                <audio
+                    id="audio-{{ color }}"
+                    src="{% static 'audio/'|add:color|add:'.wav' %}"
+                ></audio>
+                <div
+                    class="card-actions flex-1 flex flex-col justify-center items-center mb-4"
+                >
+                    <button
+                        onclick="event.stopPropagation(); play('{{color}}')"
+                        class="btn btn-circle btn-sm btn-primary mb-2"
+                        title="Play"
                     >
-                        <audio
-                            id="audio-{{ color }}"
-                            src="{% static 'audio/'|add:color|add:'.wav' %}"
-                        ></audio>
-
-                        <!-- Control buttons -->
-                        <div
-                            class="card-actions flex-1 flex flex-col justify-center items-center mb-4"
-                        >
-                            <button
-                                onclick="event.stopPropagation(); play('{{color}}')"
-                                class="btn btn-circle btn-sm btn-primary mb-2"
-                                title="Play"
-                            >
-                                <i class="fas fa-play text-xs"></i>
-                            </button>
-                            <button
-                                onclick="event.stopPropagation(); pause('{{color}}')"
-                                class="btn btn-circle btn-sm btn-warning mb-2"
-                                title="Pause"
-                            >
-                                <i class="fas fa-pause text-xs"></i>
-                            </button>
-                            <button
-                                onclick="event.stopPropagation(); toggleLoop('{{color}}')"
-                                class="btn btn-circle btn-sm btn-secondary"
-                                title="Loop"
-                                id="loop-btn-{{color}}"
-                            >
-                                <i class="fas fa-repeat text-xs"></i>
-                            </button>
-                        </div>
-
-                        <!-- Volume control -->
-                        <div class="w-full mt-2">
-                            <label
-                                for="volume-{{ color }}"
-                                class="text-xs opacity-80 mb-2 block"
-                                >Volume</label
-                            >
-                            <input
-                                id="volume-{{ color }}"
-                                type="range"
-                                min="0"
-                                max="1"
-                                step="0.01"
-                                value="0.5"
-                                onchange="setVolume('{{color}}', this.value)"
-                                class="range range-xs w-full"
-                            />
-                        </div>
-                    </div>
-
-                    <!-- Click indicator when not flipped -->
-                    <div
-                        id="indicator-{{ color }}"
-                        class="card-actions justify-end mt-auto"
+                        <i class="fas fa-play text-xs"></i>
+                    </button>
+                    <button
+                        onclick="event.stopPropagation(); pause('{{color}}')"
+                        class="btn btn-circle btn-sm btn-warning mb-2"
+                        title="Pause"
                     >
-                        <span class="text-xs opacity-80">Click to control</span>
-                    </div>
+                        <i class="fas fa-pause text-xs"></i>
+                    </button>
+                    <button
+                        onclick="event.stopPropagation(); toggleLoop('{{color}}')"
+                        class="btn btn-circle btn-sm btn-secondary"
+                        title="Loop"
+                        id="loop-btn-{{color}}"
+                    >
+                        <i class="fas fa-repeat text-xs"></i>
+                    </button>
+                </div>
+                <div class="w-full mt-2">
+                    <label
+                        for="volume-{{ color }}"
+                        class="text-xs opacity-80 mb-2 block"
+                        >Volume</label
+                    >
+                    <input
+                        id="volume-{{ color }}"
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value="0.5"
+                        onchange="setVolume('{{color}}', this.value)"
+                        class="range range-xs w-full"
+                    />
                 </div>
             </div>
-            {% endfor %}
+            <div
+                id="indicator-{{ color }}"
+                class="card-actions justify-end mt-auto"
+            >
+                <span class="text-xs opacity-80">Click to control</span>
+            </div>
         </div>
-        {% endblock %} {% block extra_js %}
-        <script src="{% static 'selector/js/selector.js' %}"></script>
-        {% endblock %}
     </div>
+    {% endfor %}
 </div>
+{% endblock %} {% block extra_js %}
+<script src="{% static 'selector/js/selector.js' %}"></script>
+{% endblock %}
