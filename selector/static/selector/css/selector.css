@@ -21,9 +21,9 @@
     color: var(--color-neutral) !important;
 }
 
-[data-theme="light"] .card:hover,
+/* [data-theme="light"] .card:hover,
 html[data-theme-light] .card:hover,
 body[data-theme-light] .card:hover {
     background-color: var(--color-neutral) !important;
     color: var(--color-base-100) !important;
-}
+} */

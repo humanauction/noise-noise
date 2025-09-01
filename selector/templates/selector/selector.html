@@ -4,17 +4,17 @@
 >
     {% for color in colors %} {% if color == "white" %}
     <div
-        class="card bg-white text-black h-60 w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
+        class="card custom-card bg-white text-black h-60 w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
         onclick="flipCard('{{ color }}')"
     >
         {% elif color == "brown" %}
         <div
-            class="card bg-yellow-900 text-white h-60 w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
+            class="card custom-card bg-yellow-900 text-white h-60 w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
             onclick="flipCard('{{ color }}')"
         >
             {% else %}
             <div
-                class="card bg-{{ color }}-500 text-white h-60 w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
+                class="card custom-card bg-{{ color }}-500 text-white h-60 w-60 cursor-pointer transform transition-transform duration-300 hover:scale-105"
                 onclick="flipCard('{{ color }}')"
             >
                 {% endif %}

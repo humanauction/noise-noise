@@ -5,19 +5,9 @@ const loopStates = {};
 function flipCard(color) {
     const controls = document.getElementById(`controls-${color}`);
     const indicator = document.getElementById(`indicator-${color}`);
-
-    if (flippedCards.has(color)) {
-        // Flip back to title view
-        controls.classList.remove("show");
-        controls.classList.add("hidden");
-        indicator.classList.remove("hide");
-        flippedCards.delete(color);
-    } else {
-        // Flip to controls view
-        controls.classList.remove("hidden");
-        controls.classList.add("show");
-        indicator.classList.add("hide");
-        flippedCards.add(color);
+    if (controls && indicator) {
+        controls.classList.toggle("hidden");
+        indicator.classList.toggle("hidden");
     }
 }
 
