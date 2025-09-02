@@ -441,7 +441,7 @@
 }
 .range {
   appearance: none;
-  webkit-appearance: none;
+  -webkit-appearance: none;
   --range-thumb: var(--color-base-100);
   --range-thumb-size: calc(var(--size-selector, 0.25rem) * 6);
   --range-progress: currentColor;
@@ -497,7 +497,7 @@
     width: var(--range-thumb-size);
     border: var(--range-p) solid;
     appearance: none;
-    webkit-appearance: none;
+    -webkit-appearance: none;
     top: 50%;
     color: var(--range-progress);
     transform: translateY(-50%);

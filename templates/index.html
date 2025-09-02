@@ -64,7 +64,7 @@
                 <label for="theme-toggle" class="ml-2 text-sm"></label>
             </div>
         </nav>
-        <main class="flex-1 max-w-7xl mx-auto px-4 py-6">
+        <main class="flex-1 mx-auto">
             {% block content %} {% endblock %}
         </main>
         <!-- Footer -->
@@ -126,6 +126,6 @@
         <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
         <script src="{% static 'js/script.js' %}"></script>
         <script src="{% static 'js/csrf.js' %}"></script>
-        <script src="{% static 'selector/js/selector.js' %}"></script>
+        {% block extra_js %}{% endblock %}
     </body>
 </html>
