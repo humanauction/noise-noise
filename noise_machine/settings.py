@@ -48,6 +48,10 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.herokuapp.com'
     ]
 
+# tailwind
+
+TAILWIND_APP_NAME = 'theme'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -58,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'tailwind',
 
     # 3rd party apps
     'allauth',

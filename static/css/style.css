@@ -1,6 +1,6 @@
 /* global styles vars*/
 
-:root {
+/* :root {
     --primary-font: "TASA Orbiter", sans-serif, monospace;
     --secondary-font: "Roboto", monospace;
     --accent-font: "Atkinson Hyperlegible", sans-serif, monospace;
@@ -15,4 +15,4 @@ body {
 span,
 nav {
     font-family: var(--primary-font);
-}
+} */

@@ -1,6 +1,8 @@
 from django.urls import path, include
 from .views import GuestAccessView
 
+app_name = 'accounts'
+
 urlpatterns = [
 
     # path('login/', CustomLoginView.as_view(), name='login'),
