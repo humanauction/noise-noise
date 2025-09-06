@@ -50,7 +50,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 # tailwind
 
-TAILWIND_APP_NAME = 'theme'
+
 
 # Application definition
 
@@ -63,15 +63,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'tailwind',
-
+    'selector',
+    'accounts',
     # 3rd party apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
 
     # Local apps
-    'selector',
-    'accounts',
+    
 ]
 
 MIDDLEWARE = [

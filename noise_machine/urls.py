@@ -21,13 +21,16 @@ from django.shortcuts import redirect
 
 def home_redirect(request):
     if request.user.is_authenticated:
-        return redirect('selector:selector')
+        return redirect('selector:index')
     return redirect('accounts:login')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
+    path(
+        'accounts/',
+        include(('accounts.urls', 'accounts'), namespace='accounts')
+    ),
     path('selector/', include('selector.urls')),
     path('', home_redirect, name='home'),
 ]

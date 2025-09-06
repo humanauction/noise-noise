@@ -1,6 +1,9 @@
-/* global styles vars*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* :root {
+
+:root {
     --primary-font: "TASA Orbiter", sans-serif, monospace;
     --secondary-font: "Roboto", monospace;
     --accent-font: "Atkinson Hyperlegible", sans-serif, monospace;
@@ -15,4 +18,20 @@ body {
 span,
 nav {
     font-family: var(--primary-font);
+}
+
+/* .grid-cols-2 {
+    @media (min-width: 640px) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+.grid-cols-3 {
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+.grid-cols-4 {
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 } */

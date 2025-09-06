@@ -6,21 +6,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Noise Machine</title>
-
-        {% comment %}
-        <script src="https://cdn.tailwindcss.com"></script>
-        {% endcomment %}
         <link rel="stylesheet" href="{% static 'css/output.css' %}" />
-        <link
-            href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
-            rel="stylesheet"
-            type="text/css"
-        />
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-        <link
-            rel="stylesheet"
-            href="{% static 'selector/css/selector.css' %}"
-        />
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -44,7 +30,7 @@
         >
             <div class="flex items-center space-x-4">
                 <a
-                    href="{% url 'selector:home' %}"
+                    href="{% url 'selector:index' %}"
                     class="btn btn-ghost normal-case text-xl"
                     >Home</a
                 >
@@ -123,7 +109,9 @@
                 </div>
             </div>
         </footer>
+        <!-- {% comment %}
         <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+        {% endcomment %} -->
         <script src="{% static 'js/script.js' %}"></script>
         <script src="{% static 'js/csrf.js' %}"></script>
         {% block extra_js %}{% endblock %}
