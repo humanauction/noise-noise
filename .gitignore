@@ -56,8 +56,6 @@ Pipfile.lock
 
 # Node.js
 node_modules/
-static/css/output.css
-static/css/output.css.map
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -71,3 +69,13 @@ Desktop.ini
 # dotenv
 .env
 .env.*
+
+# Static files
+static/css/dist
+static/css/output.css
+static/css/output.css.map
+/staticfiles/
+/static/
+!static/README.md
+!static/audio/
+!static/images/

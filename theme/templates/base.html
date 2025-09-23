@@ -8,7 +8,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% tailwind_css %}
     <title>Noise Machine</title>
-        <link rel="stylesheet" href="{% static 'theme/static/css/output.css' %}" />
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -25,9 +24,9 @@
             type="image/x-icon"
         />
 </head>
-<body class="bg-gray-50 text-black font-serif leading-normal tracking-normal">
+<body class="min-h-screen flex flex-col">
     <nav
-            class="navbar bg-base-200 px-4 py-2 flex justify-end items-center mb-4"
+        class="navbar bg-base-200 px-4 py-2 flex justify-end items-center mb-4"
         >
             <div class="flex items-center space-x-4">
                 <a
@@ -53,70 +52,31 @@
                 <label for="theme-toggle" class="ml-2 text-sm"></label>
             </div>
         </nav>
-<main class="flex-1 mx-auto">
+<main class="flex-1">
 {% block content %} {% endblock %}
 </main>
 <!-- Footer -->
-        <footer class="bg-base-200 py-4 mt-auto">
-            <div class="flex flex-col items-center space-y-4">
-                <nav>
-                    <select
-                        id="theme-select"
-                        class="select select-bordered theme-controller"
-                        data-choose-theme
-                    >
-                        <option value="light">Light</option>
-                        <option value="dark">Dark</option>
-                        <option value="cupcake">Cupcake</option>
-                        <option value="bumblebee">Bumblebee</option>
-                        <option value="emerald">Emerald</option>
-                        <option value="corporate">Corporate</option>
-                        <option value="synthwave">Synthwave</option>
-                        <option value="retro">Retro</option>
-                        <option value="cyberpunk">Cyberpunk</option>
-                        <option value="valentine">Valentine</option>
-                        <option value="halloween">Halloween</option>
-                        <option value="garden">Garden</option>
-                        <option value="forest">Forest</option>
-                        <option value="aqua">Aqua</option>
-                        <option value="lofi">Lofi</option>
-                        <option value="pastel">Pastel</option>
-                        <option value="fantasy">Fantasy</option>
-                        <option value="wireframe">Wireframe</option>
-                        <option value="black">Black</option>
-                        <option value="luxury">Luxury</option>
-                        <option value="dracula">Dracula</option>
-                        <option value="cmyk">CMYK</option>
-                        <option value="autumn">Autumn</option>
-                        <option value="business">Business</option>
-                        <option value="acid">Acid</option>
-                        <option value="lemonade">Lemonade</option>
-                        <option value="night">Night</option>
-                        <option value="coffee">Coffee</option>
-                        <option value="winter">Winter</option>
-                    </select>
-                </nav>
-                <div class="flex justify-center space-x-8">
-                    <a href="#" rel="noopener" class="text-blue-600 text-xl"
-                        ><i class="fa-brands fa-facebook"></i
-                    ></a>
-                    <a href="#" rel="noopener" class="text-green-600 text-xl"
-                        ><i class="fa-brands fa-spotify"></i
-                    ></a>
-                    <a href="#" rel="noopener" class="text-red-600 text-xl"
-                        ><i class="fa-brands fa-instagram"></i
-                    ></a>
-                    <a href="#" rel="noopener" class="text-black text-xl"
-                        ><i class="fa-brands fa-x-twitter"></i
-                    ></a>
-                </div>
-            </div>
-        </footer>
-        <!-- {% comment %}
-        <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
-        {% endcomment %} -->
-        <script src="{% static 'js/script.js' %}"></script>
-        <script src="{% static 'js/csrf.js' %}"></script>
-        {% block extra_js %}{% endblock %}
+<footer class="bg-base-200 py-4">
+        <div class="flex justify-center space-x-8">
+            <a href="#" rel="noopener" class="text-blue-600 text-xl"
+                ><i class="fa-brands fa-facebook"></i
+            ></a>
+            <a href="#" rel="noopener" class="text-green-600 text-xl"
+                ><i class="fa-brands fa-spotify"></i
+            ></a>
+            <a href="#" rel="noopener" class="text-red-600 text-xl"
+                ><i class="fa-brands fa-instagram"></i
+            ></a>
+            <a href="#" rel="noopener" class="text-black text-xl"
+                ><i class="fa-brands fa-x-twitter"></i
+            ></a>
+        </div>
+    </div>
+</footer> 
+<script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+<script src="{% static 'js/csrf.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'selector/js/selector.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>

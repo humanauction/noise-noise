@@ -1,3 +1,5 @@
+const csrftoken = getCookie('csrftoken');
+console.log("CSRF Token:", csrftoken);
 // Track flipped state and loop state
 const flippedCards = new Set();
 const loopStates = {};
