@@ -45,11 +45,12 @@
                 <input
                     type="checkbox"
                     id="theme-toggle"
-                    name="theme-toggle"
-                    value="synthwave"
+                    name="theme-select"
+                    value="light"
+                    value="dark"
                     class="toggle theme-controller"
                 />
-                <label for="theme-toggle" class="ml-2 text-sm"></label>
+                <label for="theme-select" class="ml-2 text-sm"></label>
             </div>
         </nav>
 <main class="flex-1">
@@ -73,10 +74,9 @@
         </div>
     </div>
 </footer> 
-<script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+
 <script src="{% static 'js/csrf.js' %}"></script>
 <script src="{% static 'js/script.js' %}"></script>
-<script src="{% static 'selector/js/selector.js' %}"></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>
