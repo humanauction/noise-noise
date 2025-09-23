@@ -1,12 +1,14 @@
-{% load static %}
-
+{% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en" id="data-theme" style="scroll-behavior: smooth">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Noise Machine</title>
-        <link rel="stylesheet" href="{% static 'css/output.css' %}" />
+<html lang="en">
+<head>
+    <title>Django Tailwind</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% tailwind_css %}
+    <title>Noise Machine</title>
+        <link rel="stylesheet" href="{% static 'theme/static/css/output.css' %}" />
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -22,10 +24,9 @@
             href="{% static 'images/favicon.ico' %}"
             type="image/x-icon"
         />
-    </head>
-    <body id="body" class="flex flex-col min-h-screen">
-        <!-- Navbar -->
-        <nav
+</head>
+<body class="bg-gray-50 text-black font-serif leading-normal tracking-normal">
+    <nav
             class="navbar bg-base-200 px-4 py-2 flex justify-end items-center mb-4"
         >
             <div class="flex items-center space-x-4">
@@ -38,7 +39,7 @@
                     >Selector</a
                 >
                 <a
-                    href="{% url 'accounts:account_login' %}"
+                    href="{% url 'account_login' %}"
                     class="btn btn-ghost"
                     >Login</a
                 >
@@ -52,8 +53,10 @@
                 <label for="theme-toggle" class="ml-2 text-sm"></label>
             </div>
         </nav>
-        <main class="flex-1 mx-auto">{% block content %} {% endblock %}</main>
-        <!-- Footer -->
+<main class="flex-1 mx-auto">
+{% block content %} {% endblock %}
+</main>
+<!-- Footer -->
         <footer class="bg-base-200 py-4 mt-auto">
             <div class="flex flex-col items-center space-y-4">
                 <nav>
@@ -115,5 +118,5 @@
         <script src="{% static 'js/script.js' %}"></script>
         <script src="{% static 'js/csrf.js' %}"></script>
         {% block extra_js %}{% endblock %}
-    </body>
+</body>
 </html>
