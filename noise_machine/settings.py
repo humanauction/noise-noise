@@ -49,7 +49,7 @@ CSRF_TRUSTED_ORIGINS = [
     ]
 
 # tailwind
-
+TAILWIND_APP_NAME = 'theme'
 
 
 # Application definition
@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'tailwind',
+    'theme',
     'selector',
     'accounts',
     # 3rd party apps
@@ -70,9 +71,11 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
-    # Local apps
-    
+    # Local apps 
 ]
+if DEBUG:
+    # Add django_browser_reload only in DEBUG mode
+    INSTALLED_APPS += ['django_browser_reload']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -85,7 +88,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+if DEBUG:
+    # Add django_browser_reload middleware only in DEBUG mode
+    MIDDLEWARE += [
+        "django_browser_reload.middleware.BrowserReloadMiddleware",
+    ]
 ROOT_URLCONF = 'noise_machine.urls'
 
 TEMPLATES = [
@@ -167,7 +174,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATICFILES_DIRS = [os.path.join(BASE_DIR / "theme" / "static"), ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
@@ -195,7 +202,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_LOGOUT_ON_GET = False
 LOGIN_REDIRECT_URL = '/selector/'
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # Security settings
 CSRF_COOKIE_SECURE = False  # SET TO FALSE FOR DEVELOPMENT
@@ -209,3 +216,5 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # DEVELOPMENT ONLY: print emails to terminal
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+NPM_BIN_PATH = '/usr/local/bin/npm'
