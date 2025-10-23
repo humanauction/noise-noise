@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-10 m-10">
+<div class="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-8 m-8">
     {% for color in colors %}
     <div
         class="card custom-card cursor-pointer aspect-square max-w-xs mx-auto 
@@ -10,7 +10,7 @@
                         shadow-lg transition-transform duration-300 hover:scale-105 w-full"
         onclick="flipCard('{{ color }}')"
     >
-        <div class="card-body flex flex-col p-4">
+        <div class="card-body flex flex-col p-4 h-full">
             <div class="flex-1 flex items-center justify-center">
                 <h2 class="card-title text-lg sm:text-xl font-bold text-center">
                     {{ color|capfirst }} Noise
@@ -25,37 +25,32 @@
                     src="{% static 'selector/audio/'|add:color|add:'.wav' %}"
                 ></audio>
                 <div
-                    class="card-actions flex-1 flex flex-col justify-center items-center mb-4"
+                    class="card-actions flex-1 flex flex-row justify-center items-center mb-auto"
                 >
                     <button
                         onclick="event.stopPropagation(); play('{{color}}')"
-                        class="btn btn-circle btn-sm btn-primary mb-2"
+                        class="btn btn-circle btn-sm btn-primary mx-1"
                         title="Play"
                     >
                         <i class="fas fa-play text-xs"></i>
                     </button>
                     <button
                         onclick="event.stopPropagation(); pause('{{color}}')"
-                        class="btn btn-circle btn-sm btn-warning mb-2"
+                        class="btn btn-circle btn-sm btn-warning mx-1"
                         title="Pause"
                     >
                         <i class="fas fa-pause text-xs"></i>
                     </button>
                     <button
                         onclick="event.stopPropagation(); toggleLoop('{{color}}')"
-                        class="btn btn-circle btn-sm btn-secondary"
+                        class="btn btn-circle btn-sm btn-secondary mx-1"
                         title="Loop"
                         id="loop-btn-{{color}}"
                     >
                         <i class="fas fa-repeat text-xs"></i>
                     </button>
                 </div>
-                <div class="w-full mt-2">
-                    <label
-                        for="volume-{{ color }}"
-                        class="text-xs opacity-80 mb-2 block"
-                        >Volume</label
-                    >
+                <div class="w-full mt-2 flex items-center space-x-2">
                     <input
                         id="volume-{{ color }}"
                         type="range"
@@ -63,9 +58,13 @@
                         max="1"
                         step="0.01"
                         value="0.5"
-                        onchange="setVolume('{{color}}', this.value)"
-                        class="range range-xs w-full"
+                        onchange="event.stopPropagation(); setVolume('{{color}}', this.value)"
+                        class="range range-xs flex-1"
                     />
+                    <label
+                        for="volume-{{ color }}"
+                        class="text-xs opacity-80 mb-2 block" aria-details="Volume control for {{ color }} noise"
+                    ></label>
                 </div>
             </div>
             <div
