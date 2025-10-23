@@ -29,3 +29,18 @@ input[type="range"].fader-v::-moz-range-thumb {
     border-radius: 4px;
     border: none;
 }
+
+/* Round EQ slider style */
+
+.rs-control .rs-range-color {
+background-color: #54bbe0;
+}
+.rs-control .rs-path-color {
+background-color: white;
+}
+.rs-control .rs-handle:after {
+background-color: #070000;
+}
+.rs-control .rs-bg-color {
+background-color: #090909;
+}
