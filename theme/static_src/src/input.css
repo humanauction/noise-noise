@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+/* Vertical fader styling */
+input[type="range"].fader-vertical {
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    appearance: slider-vertical;
+    width: 8px;
+    height: 100%;
+    background: linear-gradient(to top, #1e293b 0%, #475569 100%);
+    border-radius: 8px;
+}
+
+input[type="range"].fader-vertical::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 32px;
+    height: 16px;
+    background: #3b82f6;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+input[type="range"].fader-vertical::-moz-range-thumb {
+    width: 32px;
+    height: 16px;
+    background: #3b82f6;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+}

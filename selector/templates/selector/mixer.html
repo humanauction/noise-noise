@@ -1,0 +1,124 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="mixer-container p-8">
+    <h1 class="text-3xl font-bold mb-8 text-center">5-Track Mixer</h1>
+
+    <div class="flex gap-8 justify-center">
+        {% for track in tracks %}
+        <div class="channel-strip bg-base-300 p-4 rounded-lg shadow-xl w-32">
+            <h3 class="text-center font-bold mb-4">{{ track.name }}</h3>
+
+            <div class="fader-container h-64 flex flex-col items-center mb-4">
+                <input
+                    type="range"
+                    id="fader-{{ track.id }}"
+                    class="fader-vertical"
+                    orient="vertical"
+                    min="0"
+                    max="100"
+                    value="75"
+                    data-track="{{ track.id }}"
+                    data-audio-src="{% static 'audio/' %}{{ track.id }}.wav"
+                />
+                <label class="text-xs mt-2">Volume</label>
+            </div>
+
+            <div
+                class="peak-meter h-4 bg-green-500 rounded"
+                id="meter-{{ track.id }}"
+            ></div>
+
+            <div class="flex gap-2 mt-4">
+                <button
+                    class="btn btn-sm btn-error"
+                    onclick="mute('{{ track.id }}')"
+                >
+                    M
+                </button>
+                <button
+                    class="btn btn-sm btn-warning"
+                    onclick="solo('{{ track.id }}')"
+                >
+                    S
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div
+            class="channel-strip bg-base-100 p-4 rounded-lg shadow-xl w-32 border-2 border-primary"
+        >
+            <h3 class="text-center font-bold mb-4">MASTER</h3>
+            <div class="fader-container h-64 flex flex-col items-center mb-4">
+                <input
+                    type="range"
+                    id="fader-master"
+                    class="fader-vertical"
+                    orient="vertical"
+                    min="0"
+                    max="100"
+                    value="75"
+                />
+                <label class="text-xs mt-2">Output</label>
+            </div>
+            <div
+                class="peak-meter h-4 bg-red-500 rounded"
+                id="meter-master"
+            ></div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+    const audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+    const tracks = {};
+    const masterGain = audioContext.createGain();
+    masterGain.connect(audioContext.destination);
+
+    // Initialize tracks
+    document.querySelectorAll("[data-track]").forEach((fader) => {
+        const trackId = fader.dataset.track;
+        const audioSrc = fader.dataset.audioSrc; // Get path from data attribute
+
+        const audio = new Audio(audioSrc);
+        const source = audioContext.createMediaElementSource(audio);
+        const gainNode = audioContext.createGain();
+
+        source.connect(gainNode);
+        gainNode.connect(masterGain);
+
+        tracks[trackId] = { audio, gainNode, muted: false };
+
+        fader.addEventListener("input", (e) => {
+            const volume = e.target.value / 100;
+            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+        });
+
+        audio.loop = true;
+        audio.play().catch((e) => console.log("Autoplay blocked:", e));
+    });
+
+    document.getElementById("fader-master").addEventListener("input", (e) => {
+        const volume = e.target.value / 100;
+        masterGain.gain.setValueAtTime(volume, audioContext.currentTime);
+    });
+
+    function mute(trackId) {
+        const track = tracks[trackId];
+        track.muted = !track.muted;
+        track.gainNode.gain.setValueAtTime(
+            track.muted ? 0 : 0.75,
+            audioContext.currentTime
+        );
+    }
+
+    function solo(trackId) {
+        Object.keys(tracks).forEach((id) => {
+            tracks[id].gainNode.gain.setValueAtTime(
+                id === trackId ? 0.75 : 0,
+                audioContext.currentTime
+            );
+        });
+    }
+</script>
+{% endblock %}

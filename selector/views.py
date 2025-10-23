@@ -1,4 +1,5 @@
 from django.views.generic import TemplateView
+from django.shortcuts import render
 
 # Create your views here.
 
@@ -19,3 +20,15 @@ class SelectorView(TemplateView):
             'purple', 'yellow', 'brown', 'green'
         ]
         return context
+
+
+def mixer_view(request):
+    """Mixer page view."""
+    tracks = [
+        {'id': 'white', 'name': 'White Noise'},
+        {'id': 'pink', 'name': 'Pink Noise'},
+        {'id': 'brown', 'name': 'Brown Noise'},
+        {'id': 'blue', 'name': 'Blue Noise'},
+        {'id': 'purple', 'name': 'Purple Noise'},
+    ]
+    return render(request, 'selector/mixer.html', {'tracks': tracks})

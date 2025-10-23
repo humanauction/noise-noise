@@ -1,2 +1,2 @@
 django: python manage.py runserver
-tailwind: python manage.py tailwind start
+tailwind: cd theme/static_src && npm run dev
