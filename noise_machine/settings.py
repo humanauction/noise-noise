@@ -71,7 +71,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
-    # Local apps 
+    # Local apps
 ]
 if DEBUG:
     # Add django_browser_reload only in DEBUG mode

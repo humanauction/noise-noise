@@ -11,11 +11,10 @@
                 <input
                     type="range"
                     id="fader-{{ track.id }}"
-                    class="fader-vertical"
-                    orient="vertical"
+                    class="fader-v"
                     min="0"
                     max="100"
-                    value="75"
+                    value="0"
                     data-track="{{ track.id }}"
                     data-audio-src="{% static 'audio/' %}{{ track.id }}.wav"
                 />
@@ -52,11 +51,11 @@
                 <input
                     type="range"
                     id="fader-master"
-                    class="fader-vertical"
-                    orient="vertical"
+                    class="fader-v"
+                    style="writing-mode: vertical-lr; direction: rtl;"
                     min="0"
                     max="100"
-                    value="75"
+                    value="10"
                 />
                 <label class="text-xs mt-2">Output</label>
             </div>
@@ -92,10 +91,11 @@
         fader.addEventListener("input", (e) => {
             const volume = e.target.value / 100;
             gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+            if (audio.paused && volume > 0) {
+                audio.play();
+            }
         });
-
         audio.loop = true;
-        audio.play().catch((e) => console.log("Autoplay blocked:", e));
     });
 
     document.getElementById("fader-master").addEventListener("input", (e) => {
