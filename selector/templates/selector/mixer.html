@@ -3,17 +3,11 @@
 {% block content %}
 <div class="mixer-container p-8">
     <h1 class="text-3xl font-bold mb-8 text-center">Multi-Track Mixer</h1>
-    <div class="flex gap-8 justify-center">
+    <div class="flex gap-1 justify-center">
         {% for track in tracks %}   
         <!-- Channel strip for each track -->
         <div class="channel-strip bg-base-300 p-4 rounded-lg shadow-xl w-32">
-        <!-- Audio source selector -->
-            <select id="audio-select-{{ track.id }}" class="select select-xs w-full mb-2" data-track="{{ track.id }}">
-                <option value="">Select Audio</option>
-                {% for audio in audio_files %}
-                <option value="{% static 'audio/' %}{{ audio }}">{{ audio|slice:":-4" }}</option>
-                {% endfor %}
-            </select>   
+        
         <!-- EQ section for each track -->
             <div class="eq-controls flex flex-col items-center gap-2 mb-2">
                 <label class="text-xs">HI</label>
@@ -23,11 +17,16 @@
                 <label class="text-xs">LO</label>
                 <div id="eq-lo-{{ track.id }}" class="eq-knob"></div>
             </div>
+            <div class="flex flex-row gap-4 my-4 justify-center">
+                <button class="btn btn-xs btn-warning" onclick="solo('{{ track.id }}')">S</button>
+                <button class="btn btn-xs btn-error" onclick="mute('{{ track.id }}')">M</button>
+            </div>
             <div class="fader-container h-64 flex flex-col items-center mb-4">
                 <input
                     type="range"
                     id="fader-{{ track.id }}"
                     class="fader-v"
+                    style=""
                     min="0"
                     max="100"
                     value="0"
@@ -36,10 +35,13 @@
                 <label class="text-xs mt-2">Volume</label>
             </div>
             <div class="peak-meter h-4 bg-green-500 rounded" id="meter-{{ track.id }}"></div>
-            <div class="flex gap-2 mt-4">
-                <button class="btn btn-sm btn-error" onclick="mute('{{ track.id }}')">M</button>
-                <button class="btn btn-sm btn-warning" onclick="solo('{{ track.id }}')">S</button>
-            </div>
+            <!-- Audio source selector -->
+            <select id="audio-select-{{ track.id }}" class="select select-xs w-full mb-2" data-track="{{ track.id }}">
+                <option value="">Select Audio</option>
+                {% for audio in audio_files %}
+                <option value="{% static 'audio/' %}{{ audio }}">{{ audio|slice:":-4" }}</option>
+                {% endfor %}
+            </select>   
             <h3 class="text-center font-bold mb-4">{{ track.name }}</h3>
         </div>
         {% endfor %}
@@ -93,8 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const gainNode = audioContext.createGain();
         gainNode.gain.value = 0;
 
-        // Connect: source -> low -> mid -> hi -> gain -> master
-        source.connect(low);
+        // Connect: mid -> hi -> gain -> master
         low.connect(mid);
         mid.connect(hi);
         hi.connect(gainNode);
@@ -113,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 tracks[trackId].audio.currentTime = 0;
             }
 
-            // creat new audio
+            // create new audio
             const audio = new Audio(audioSrc);
             audio.loop = true;
             const source = audioContext.createMediaElementSource(audio);
@@ -132,87 +133,80 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // EQ pots here
         $(`#eq-lo-${trackId}`).roundSlider({
-            sliderType: 'range',
-            min: -30,
-            max: 30,
-            value: 0,
-            width: 2,
-            radius: 15,
-            handleSize: "+10",
+            sliderType: "min-range",
             circleShape: "pie",
-            mouseScrollAction: true,
+            startAngle: "315",
             lineCap: "round",
-            handleShape: "round",
-            startAngle: 315,
-            drag: function (e) {
-                if (tracks[trackId]) {
-                    tracks[trackId].low.gain.setValueAtTime(e.value, audioContext.currentTime);
-                }
-            },
-            change: function (e) {
-                const $slider = $(this.input);
-                if (e.value > 0) {
-                    $slider.find('.rs-path-color').css('background-color', '#1cca22');
-                } else {
-                    $slider.find('.rs-path-color').css('background-color', '#ffffff');
-                }
+            // handleShape: "round",
+            // handleSize: "+10",
+            mouseScrollAction: true,
+            radius: 15,
+            width: 2,
+            min: -50,
+            max: 50,
+            svgMode: true,
+            pathColor: "#eee",
+            borderWidth: 0,
+            startValue: 0,
+            valueChange: function (e) {
+                var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
+                $(`#eq-lo-${trackId}`).roundSlider({ "rangeColor": color, "tooltipColor": color });
             }
         });
 
+        var sliderObj = $(`#eq-lo-${trackId}`).data("roundSlider");
+        sliderObj.setValue(0);
+
         $(`#eq-mid-${trackId}`).roundSlider({
-            sliderType: 'range',
-            min: -30,
-            max: 30,
-            value: 0,
-            width: 2,
-            radius: 15,
-            handleSize: "+10",
+            sliderType: "min-range",
             circleShape: "pie",
-            mouseScrollAction: true,
+            startAngle: "315",
             lineCap: "round",
-            handleShape: "round",
-            startAngle: 315,
-            drag: function (e) {
-                if (tracks[trackId]) {
-                    tracks[trackId].mid.gain.setValueAtTime(e.value, audioContext.currentTime);
-                }
-            },
-            change: function (e) {
-                const $slider = $(this.input);
-                if (e.value > 0) {
-                    $slider.find('.rs-path-color').css('background-color', '#1cca22');
-                } else {
-                    $slider.find('.rs-path-color').css('background-color', '#ffffff');
-                }
+            // handleShape: "round",
+            // handleSize: "+10",
+            mouseScrollAction: true,
+            radius: 15,
+            width: 2,
+            min: -50,
+            max: 50,
+            svgMode: true,
+            pathColor: "#eee",
+            borderWidth: 0,
+            startValue: 0,
+            valueChange: function (e) {
+                var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
+                $(`#eq-mid-${trackId}`).roundSlider({ "rangeColor": color, "tooltipColor": color });
             }
         });
+
+        var sliderObj = $(`#eq-mid-${trackId}`).data("roundSlider");
+        sliderObj.setValue(0);
+
         $(`#eq-hi-${trackId}`).roundSlider({
-            sliderType: 'range',
-            min: -30,
-            max: 30,
-            value: 0,
-            width: 2,
-            radius: 15,
-            handleSize: "+10",
+            sliderType: "min-range",
             circleShape: "pie",
-            mouseScrollAction: true,
+            startAngle: "315",
             lineCap: "round",
-            handleShape: "round",
-            startAngle: 315,
-            drag: function (e) {
-                if (tracks[trackId]) {
-                    tracks[trackId].hi.gain.setValueAtTime(e.value, audioContext.currentTime);
-                }
-            },
-            change: function (e) {
-                const $slider = $(this.input);
-                if (e.value > 0) {
-                    $slider.find('.rs-path-color').css('background-color', '#1cca22');
-                } else {
-                    $slider.find('.rs-path-color').css('background-color', '#ffffff');
-                }
+            // handleShape: "round",
+            // handleSize: "+10",
+            mouseScrollAction: true,
+            radius: 15,
+            width: 2,
+            min: -50,
+            max: 50,
+            svgMode: true,
+            pathColor: "#eee",
+            borderWidth: 0,
+            startValue: 0,
+            valueChange: function (e) {
+                var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
+                $(`#eq-hi-${trackId}`).roundSlider({ "rangeColor": color, "tooltipColor": color });
             }
         });
+
+        var sliderObj = $(`#eq-hi-${trackId}`).data("roundSlider");
+        sliderObj.setValue(0);
+
     });
 
     // Master fader logic
@@ -243,8 +237,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fader control
     document.querySelectorAll(".fader-v").forEach((fader) => {
         const trackId = fader.dataset.track;
-        const gainNode = tracks[trackId].gainNode;
+        if (!trackId) return;
 
+        const gainNode = tracks[trackId].gainNode;
         fader.addEventListener("input", (e) => {
             const volume = e.target.value / 100;
             gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
