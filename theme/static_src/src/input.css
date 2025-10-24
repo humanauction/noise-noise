@@ -35,6 +35,7 @@ input[type="range"].fader-v::-moz-range-thumb {
 .rs-control .rs-range-color:after {
 background-color: #1cca22;
 }
+
 .rs-control .rs-path-color {
 background-color: transparent;
 }
