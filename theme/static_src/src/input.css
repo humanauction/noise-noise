@@ -33,14 +33,12 @@ input[type="range"].fader-v::-moz-range-thumb {
 /* Round EQ slider style */
 
 .rs-control .rs-range-color {
-background-color: #54bbe0;
+background-color: #1cca22;
 }
 .rs-control .rs-path-color {
-background-color: white;
+background-color: #ffffff;
 }
-.rs-control .rs-handle:after {
-background-color: #070000;
-}
+
 .rs-control .rs-bg-color {
-background-color: #090909;
+    background-color: #070000;
 }

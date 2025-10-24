@@ -5,8 +5,20 @@
     <h1 class="text-3xl font-bold mb-8 text-center">5-Track Mixer</h1>
     <div class="flex gap-8 justify-center">
         {% for track in tracks %}
+        
+            
+        <!-- Channel strip for each track -->
         <div class="channel-strip bg-base-300 p-4 rounded-lg shadow-xl w-32">
-            <h3 class="text-center font-bold mb-4">{{ track.name }}</h3>
+            
+        <!-- EQ section for each track -->
+            <div class="eq-controls flex flex-col items-center gap-2 mb-2">
+                <label class="text-xs">HI</label>
+                <div id="eq-hi-{{ track.id }}" class="eq-knob"></div>
+                <label class="text-xs">MID</label>
+                <div id="eq-mid-{{ track.id }}" class="eq-knob"></div>
+                <label class="text-xs">LO</label>
+                <div id="eq-lo-{{ track.id }}" class="eq-knob"></div>
+            </div>
             <div class="fader-container h-64 flex flex-col items-center mb-4">
                 <input
                     type="range"
@@ -20,25 +32,17 @@
                 />
                 <label class="text-xs mt-2">Volume</label>
             </div>
-            <!-- EQ section for each track -->
-            <div class="eq-controls flex flex-col items-center gap-2 mb-2">
-                <label class="text-xs">LO</label>
-                <div id="eq-lo-{{ track.id }}" class="eq-knob"></div>
-                <label class="text-xs">MID</label>
-                <div id="eq-mid-{{ track.id }}" class="eq-knob"></div>
-                <label class="text-xs">HI</label>
-                <div id="eq-hi-{{ track.id }}" class="eq-knob"></div>
-            </div>
             <div class="peak-meter h-4 bg-green-500 rounded" id="meter-{{ track.id }}"></div>
-            <div class="flex gap-2 mt-4">
-                <button class="btn btn-sm btn-error" onclick="mute('{{ track.id }}')">M</button>
-                <button class="btn btn-sm btn-warning" onclick="solo('{{ track.id }}')">S</button>
+                <div class="flex gap-2 mt-4">
+                    <button class="btn btn-sm btn-error" onclick="mute('{{ track.id }}')">M</button>
+                    <button class="btn btn-sm btn-warning" onclick="solo('{{ track.id }}')">S</button>
+                </div>
+                <h3 class="text-center font-bold mb-4">{{ track.name }}</h3>
             </div>
-        </div>
         {% endfor %}
         <!-- Master strip (no EQ here) -->
         <div class="channel-strip bg-base-100 p-4 rounded-lg shadow-xl w-32 border-2 border-primary">
-            <h3 class="text-center font-bold mb-4">MASTER</h3>
+            
             <div class="fader-container h-64 flex flex-col items-center mb-4">
                 <input
                     type="range"
@@ -52,6 +56,7 @@
                 <label class="text-xs mt-2">Output</label>
             </div>
             <div class="peak-meter h-4 bg-red-500 rounded" id="meter-master"></div>
+            <h3 class="text-center font-bold mb-4">MASTER</h3>
         </div>
     </div>
 </div>
@@ -109,36 +114,42 @@ document.addEventListener("DOMContentLoaded", function () {
         // roundSlider knobs for EQ
         $(`#eq-lo-${trackId}`).roundSlider({
             sliderType: "range",
-            radius: 32,
+            handleShape: "round",
             value: 0,
-            min: -30,
-            max: 30,
-            startAngle: 300,
-            endAngle: "+300",
+            width: 2,
+            radius: 15,
+            handleSize: "+10",
+            circleShape: "pie",
             mouseScrollAction: true,
-            handleSize: "+30",
-            width: 15,
-            lineCap: "square",
-            handleShape: "dot",
+            lineCap: "round",
+            handleShape: "round",
+            startAngle: 315,
+            
             drag: function (e) {
                 if (tracks[trackId]) {
                     tracks[trackId].low.gain.setValueAtTime(e.value, audioContext.currentTime);
                 }
+            },
+            change: function (e) {
+                const $slider = $(this.input);
+                if (e.value > 0) {
+                    $slider.find('.rs-path-color').css('background-color', '#1cca22');
+                } else {
+                    $slider.find('.rs-path-color').css('background-color', '#ffffff');
+                }
             }
         });
         $(`#eq-mid-${trackId}`).roundSlider({
-            sliderType: "range",
-            radius: 32,
+            handleShape: "round",
             value: 0,
-            min: -30,
-            max: 30,
-            startAngle: 300,
-            endAngle: "+300",
+            width: 2,
+            radius: 15,
+            handleSize: "+8",
+            circleShape: "pie",
             mouseScrollAction: true,
-            handleSize: "+30",
-            width: 15,
-            lineCap: "square",
-            handleShape: "dot",
+            lineCap: "round",
+            handleShape: "round",
+            startAngle: 315,
             drag: function (e) {
                 if (tracks[trackId]) {
                     tracks[trackId].mid.gain.setValueAtTime(e.value, audioContext.currentTime);
@@ -146,18 +157,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
         $(`#eq-hi-${trackId}`).roundSlider({
-            sliderType: "range",
-            radius: 32,
+            handleShape: "round",
             value: 0,
-            min: -30,
-            max: 30,
-            startAngle: 300,
-            endAngle: "+300",
+            width: 2,
+            radius: 15,
+            handleSize: "+8",
+            circleShape: "pie",
             mouseScrollAction: true,
-            handleSize: "+30",
-            width: 15,
-            lineCap: "square",
-            handleShape: "dot",
+            lineCap: "round",
+            handleShape: "round",
+            startAngle: 315,
             drag: function (e) {
                 if (tracks[trackId]) {
                     tracks[trackId].hi.gain.setValueAtTime(e.value, audioContext.currentTime);
