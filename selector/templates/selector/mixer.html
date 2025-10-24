@@ -2,14 +2,18 @@
 {% load static %} 
 {% block content %}
 <div class="mixer-container p-8">
-    <h1 class="text-3xl font-bold mb-8 text-center">5-Track Mixer</h1>
+    <h1 class="text-3xl font-bold mb-8 text-center">Multi-Track Mixer</h1>
     <div class="flex gap-8 justify-center">
-        {% for track in tracks %}
-        
-            
+        {% for track in tracks %}   
         <!-- Channel strip for each track -->
         <div class="channel-strip bg-base-300 p-4 rounded-lg shadow-xl w-32">
-            
+        <!-- Audio source selector -->
+            <select id="audio-select-{{ track.id }}" class="select select-xs w-full mb-2" data-track="{{ track.id }}">
+                <option value="">Select Audio</option>
+                {% for audio in audio_files %}
+                <option value="{% static 'audio/' %}{{ audio }}">{{ audio|slice:":-4" }}</option>
+                {% endfor %}
+            </select>   
         <!-- EQ section for each track -->
             <div class="eq-controls flex flex-col items-center gap-2 mb-2">
                 <label class="text-xs">HI</label>
@@ -28,21 +32,19 @@
                     max="100"
                     value="0"
                     data-track="{{ track.id }}"
-                    data-audio-src="{% static 'audio/' %}{{ track.id }}.wav"
                 />
                 <label class="text-xs mt-2">Volume</label>
             </div>
             <div class="peak-meter h-4 bg-green-500 rounded" id="meter-{{ track.id }}"></div>
-                <div class="flex gap-2 mt-4">
-                    <button class="btn btn-sm btn-error" onclick="mute('{{ track.id }}')">M</button>
-                    <button class="btn btn-sm btn-warning" onclick="solo('{{ track.id }}')">S</button>
-                </div>
-                <h3 class="text-center font-bold mb-4">{{ track.name }}</h3>
+            <div class="flex gap-2 mt-4">
+                <button class="btn btn-sm btn-error" onclick="mute('{{ track.id }}')">M</button>
+                <button class="btn btn-sm btn-warning" onclick="solo('{{ track.id }}')">S</button>
             </div>
+            <h3 class="text-center font-bold mb-4">{{ track.name }}</h3>
+        </div>
         {% endfor %}
         <!-- Master strip (no EQ here) -->
         <div class="channel-strip bg-base-100 p-4 rounded-lg shadow-xl w-32 border-2 border-primary">
-            
             <div class="fader-container h-64 flex flex-col items-center mb-4">
                 <input
                     type="range"
@@ -73,9 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initialize tracks and roundSlider knobs
     document.querySelectorAll("[data-track]").forEach((fader) => {
         const trackId = fader.dataset.track;
-        const audioSrc = fader.dataset.audioSrc;
-        const audio = new Audio(audioSrc);
-        const source = audioContext.createMediaElementSource(audio);
 
         // EQ filters
         const low = audioContext.createBiquadFilter();
@@ -92,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hi.frequency.value = 4000;
 
         const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0;
 
         // Connect: source -> low -> mid -> hi -> gain -> master
         source.connect(low);
@@ -100,21 +100,41 @@ document.addEventListener("DOMContentLoaded", function () {
         hi.connect(gainNode);
         gainNode.connect(masterGain);
 
-        tracks[trackId] = { audio, gainNode, low, mid, hi, muted: true };
+        tracks[trackId] = { audio:null, source:null, gainNode, low, mid, hi, muted: true };
 
-        fader.addEventListener("input", (e) => {
-            const volume = e.target.value / 100;
-            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-            if (audio.paused && volume > 0) {
+        // Audio selector change event
+        document.getElementById(`audio-select-${trackId}`).addEventListener('change', function(e) {
+            const audioSrc = e.target.value;
+            if (!audioSrc) return;
+
+            // Stop and disconnect old audio if exists
+            if (tracks[trackId].audio) {
+                tracks[trackId].audio.pause();
+                tracks[trackId].audio.currentTime = 0;
+            }
+
+            // creat new audio
+            const audio = new Audio(audioSrc);
+            audio.loop = true;
+            const source = audioContext.createMediaElementSource(audio);
+
+            // connect to filter chain
+            source.connect(low);
+            tracks[trackId].audio = audio;
+            tracks[trackId].source = source;
+
+            // auto play on fader up
+            const faderValue = document.getElementById(`fader-${trackId}`).value;
+            if (faderValue > 0) {
                 audio.play();
             }
         });
-        audio.loop = true;
 
-        // roundSlider knobs for EQ
+        // EQ pots here
         $(`#eq-lo-${trackId}`).roundSlider({
-            sliderType: "range",
-            handleShape: "round",
+            sliderType: 'range',
+            min: -30,
+            max: 30,
             value: 0,
             width: 2,
             radius: 15,
@@ -124,7 +144,6 @@ document.addEventListener("DOMContentLoaded", function () {
             lineCap: "round",
             handleShape: "round",
             startAngle: 315,
-            
             drag: function (e) {
                 if (tracks[trackId]) {
                     tracks[trackId].low.gain.setValueAtTime(e.value, audioContext.currentTime);
@@ -139,12 +158,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
+
         $(`#eq-mid-${trackId}`).roundSlider({
-            handleShape: "round",
+            sliderType: 'range',
+            min: -30,
+            max: 30,
             value: 0,
             width: 2,
             radius: 15,
-            handleSize: "+8",
+            handleSize: "+10",
             circleShape: "pie",
             mouseScrollAction: true,
             lineCap: "round",
@@ -154,14 +176,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (tracks[trackId]) {
                     tracks[trackId].mid.gain.setValueAtTime(e.value, audioContext.currentTime);
                 }
+            },
+            change: function (e) {
+                const $slider = $(this.input);
+                if (e.value > 0) {
+                    $slider.find('.rs-path-color').css('background-color', '#1cca22');
+                } else {
+                    $slider.find('.rs-path-color').css('background-color', '#ffffff');
+                }
             }
         });
         $(`#eq-hi-${trackId}`).roundSlider({
-            handleShape: "round",
+            sliderType: 'range',
+            min: -30,
+            max: 30,
             value: 0,
             width: 2,
             radius: 15,
-            handleSize: "+8",
+            handleSize: "+10",
             circleShape: "pie",
             mouseScrollAction: true,
             lineCap: "round",
@@ -170,6 +202,14 @@ document.addEventListener("DOMContentLoaded", function () {
             drag: function (e) {
                 if (tracks[trackId]) {
                     tracks[trackId].hi.gain.setValueAtTime(e.value, audioContext.currentTime);
+                }
+            },
+            change: function (e) {
+                const $slider = $(this.input);
+                if (e.value > 0) {
+                    $slider.find('.rs-path-color').css('background-color', '#1cca22');
+                } else {
+                    $slider.find('.rs-path-color').css('background-color', '#ffffff');
                 }
             }
         });
@@ -185,19 +225,35 @@ document.addEventListener("DOMContentLoaded", function () {
         const track = tracks[trackId];
         track.muted = !track.muted;
         track.gainNode.gain.setValueAtTime(
-            track.muted ? 0 : 0.75,
+            track.muted ? 0 : parseFloat(document.getElementById(`fader-${trackId}`).value) / 100,
             audioContext.currentTime
         );
     };
 
     window.solo = function(trackId) {
         Object.keys(tracks).forEach((id) => {
+            const faderValue = parseFloat(document.getElementById(`fader-${id}`).value) / 100;
             tracks[id].gainNode.gain.setValueAtTime(
-                id === trackId ? 0.75 : 0,
+                id == trackId ? faderValue : 0,
                 audioContext.currentTime
             );
         });
     };
+
+    // Fader control
+    document.querySelectorAll(".fader-v").forEach((fader) => {
+        const trackId = fader.dataset.track;
+        const gainNode = tracks[trackId].gainNode;
+
+        fader.addEventListener("input", (e) => {
+            const volume = e.target.value / 100;
+            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+            
+            if (tracks[trackId].audio && tracks[trackId].audio.paused && volume > 0) {
+                tracks[trackId].audio.play();
+            }
+        });
+    });
 });
 </script>
 {% endblock %}

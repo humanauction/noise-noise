@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render
-
-# Create your views here.
+import os
+from django.conf import settings
 
 
 class HomePage(TemplateView):
@@ -24,11 +24,16 @@ class SelectorView(TemplateView):
 
 def mixer_view(request):
     """Mixer page view."""
+    # Get all .wav files from static/audio/
+    audio_dir = os.path.join(settings.BASE_DIR, 'static', 'audio')
+    audio_files = []
+    if os.path.exists(audio_dir):
+        audio_files = [f for f in os.listdir(audio_dir) if f.endswith('.wav')]
+    # Create 6 tracks
     tracks = [
-        {'id': 'white', 'name': 'White Noise'},
-        {'id': 'pink', 'name': 'Pink Noise'},
-        {'id': 'brown', 'name': 'Brown Noise'},
-        {'id': 'blue', 'name': 'Blue Noise'},
-        {'id': 'purple', 'name': 'Purple Noise'},
-    ]
-    return render(request, 'selector/mixer.html', {'tracks': tracks})
+        {'id': i, 'name': f'track: {i}'} for i in range(1, 7)]
+
+    return render(request, 'selector/mixer.html', {
+        'tracks': tracks,
+        'audio_files': audio_files
+    })
