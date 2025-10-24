@@ -7,26 +7,32 @@
         {% for track in tracks %}   
         <!-- Channel strip for each track -->
         <div class="channel-strip bg-base-300 p-4 rounded-lg shadow-xl w-32">
-        
+            <div class="peak-meter h-2 bg-green-500 mb-4 rounded" id="meter-{{ track.id }}"></div>
         <!-- EQ section for each track -->
             <div class="eq-controls flex flex-col items-center gap-2 mb-2">
                 <label class="text-xs">HI</label>
                 <div id="eq-hi-{{ track.id }}" class="eq-knob"></div>
                 <label class="text-xs">MID</label>
                 <div id="eq-mid-{{ track.id }}" class="eq-knob"></div>
-                <label class="text-xs">LO</label>
+                <label class="text-xs">LOW</label>
                 <div id="eq-lo-{{ track.id }}" class="eq-knob"></div>
             </div>
             <div class="flex flex-row gap-4 my-4 justify-center">
                 <button class="btn btn-xs btn-warning" onclick="solo('{{ track.id }}')">S</button>
                 <button class="btn btn-xs btn-error" onclick="mute('{{ track.id }}')">M</button>
             </div>
+            <!-- Audio source selector -->
+            <select id="audio-select-{{ track.id }}" class="select select-xs w-full mb-2" data-track="{{ track.id }}">
+                <option value="">Input</option>
+                {% for audio in audio_files %}
+                <option value="{% static 'audio/' %}{{ audio }}">{{ audio|slice:":-4" }}</option>
+                {% endfor %}
+            </select>
             <div class="fader-container h-64 flex flex-col items-center mb-4">
                 <input
                     type="range"
                     id="fader-{{ track.id }}"
                     class="fader-v"
-                    style=""
                     min="0"
                     max="100"
                     value="0"
@@ -34,15 +40,7 @@
                 />
                 <label class="text-xs mt-2">Volume</label>
             </div>
-            <div class="peak-meter h-4 bg-green-500 rounded" id="meter-{{ track.id }}"></div>
-            <!-- Audio source selector -->
-            <select id="audio-select-{{ track.id }}" class="select select-xs w-full mb-2" data-track="{{ track.id }}">
-                <option value="">Select Audio</option>
-                {% for audio in audio_files %}
-                <option value="{% static 'audio/' %}{{ audio }}">{{ audio|slice:":-4" }}</option>
-                {% endfor %}
-            </select>   
-            <h3 class="text-center font-bold mb-4">{{ track.name }}</h3>
+            <h4 class="text-center text-sm mt-4">{{ track.name }}</h4>
         </div>
         {% endfor %}
         <!-- Master strip (no EQ here) -->
