@@ -41,6 +41,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'noise-machine-74f044719326.herokuapp.com',
     '127.0.0.1',
+    '127.0.0.1:8000',
+    'localhost',
 ]
 
 # CSRF Verification
