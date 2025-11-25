@@ -10,13 +10,15 @@ A Django-based web application for generating and mixing colored noise sounds de
 ## Features
 
 ### 🎨 Color Noise Generator
+
 - **8 Types of Noise**: White, Pink, Red, Blue, Purple, Yellow, Brown, and Green noise
 - **Interactive Cards**: Click to reveal playback controls
 - **Audio Controls**: Play, pause, loop, and volume adjustment for each noise type
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 
 ### 🎚️ Multi-Track Mixer
-- **6-Track Mixing Console**: Professional-grade audio mixing interface
+
+- **Multi-Track Mixing Console**: Professional-grade audio mixing interface
 - **3-Band EQ**: High, Mid, and Low frequency control per track using rotary sliders
 - **Dynamic Controls**: Solo, Mute, and individual volume faders
 - **Master Output**: Global volume control with peak metering
@@ -24,12 +26,14 @@ A Django-based web application for generating and mixing colored noise sounds de
 - **Web Audio API**: Real-time audio processing in the browser
 
 ### 👤 User Authentication
+
 - **Django Allauth Integration**: Secure user registration and login
 - **Guest Access**: Try the app without creating an account
 - **Session Management**: Persistent guest sessions with UUID tokens
 - **Custom User Model**: Extended user profiles with timestamps
 
 ### 🎨 Modern UI/UX
+
 - **DaisyUI Components**: Beautiful, accessible UI components
 - **Dark/Light Mode**: Theme switcher for user preference
 - **Responsive Grid Layout**: Optimized for all screen sizes
@@ -38,6 +42,7 @@ A Django-based web application for generating and mixing colored noise sounds de
 ## Tech Stack
 
 ### Backend
+
 - **Django 4.2.23**: Web framework
 - **PostgreSQL**: Database (via Neon)
 - **Gunicorn**: WSGI server for production
@@ -45,6 +50,7 @@ A Django-based web application for generating and mixing colored noise sounds de
 - **Django Allauth**: Authentication system
 
 ### Frontend
+
 - **Tailwind CSS 4.1**: Utility-first CSS framework
 - **DaisyUI 5.1**: Component library
 - **Font Awesome**: Icon library
@@ -52,6 +58,7 @@ A Django-based web application for generating and mixing colored noise sounds de
 - **Web Audio API**: Audio processing
 
 ### Audio Processing
+
 - **NumPy**: Numerical operations
 - **SciPy**: Signal processing
 - **SoundFile**: Audio file I/O
@@ -60,43 +67,61 @@ A Django-based web application for generating and mixing colored noise sounds de
 ## Installation
 
 ### Prerequisites
+
 - Python 3.13+
 - Node.js 16+
 - PostgreSQL (or use the provided Neon database)
 
 ### Setup Steps
 
-1. **Clone the repository**
+#### 1. Clone the repository
+
 ```bash
-git clone <your-repo-url>
+git clone https://www.github.com/humanauction/noise-noise.git
 cd noise-noise
 ```
 
-2. **Create and activate virtual environment**
+#### 2. Create and activate virtual environment
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-3. **Install dependencies and setup project**
+#### 2.5. Create environment file
+
+```bash
+# Create .env file with your credentials
+echo 'SECRET_KEY="your-secret-key-here"' > .env
+echo 'DATABASE_URL=your-database-url' >> .env
+```
+
+#### 3. Install dependencies and setup project
+
 ```bash
 make setup
 ```
 
 This will:
+
 - Install Python dependencies
 - Install npm dependencies
 - Run security checks
 - Apply database migrations
 - Collect static files
 
-4. **Create a superuser (optional)**
+#### 4. Creating a superuser
+
 ```bash
 make createsuperuser
 ```
 
-5. **Generate audio files**
+#### 5. Generate audio files
+
+**Important:** Audio files are gitignored by default. You must generate them locally or on deployment:
+
 ```bash
+mkdir -p static/audio
 python manage.py generate_noise white static/audio/white.wav --duration 10
 python manage.py generate_noise pink static/audio/pink.wav --duration 10
 python manage.py generate_noise red static/audio/red.wav --duration 10
@@ -107,7 +132,8 @@ python manage.py generate_noise brown static/audio/brown.wav --duration 10
 python manage.py generate_noise green static/audio/green.wav --duration 10
 ```
 
-6. **Run the development server**
+#### 6. Run the development server
+
 ```bash
 make dev
 ```
@@ -115,6 +141,8 @@ make dev
 This starts both Django and Tailwind in watch mode.
 
 Visit `http://127.0.0.1:8000` in your browser.
+
+---
 
 ## Usage
 
@@ -137,12 +165,14 @@ make clean             # Remove generated files
 ```
 
 ### Noise Selector Page
+
 1. Navigate to `/selector/selector/`
 2. Click on any colored noise card
 3. Use play/pause/loop controls
 4. Adjust volume with the slider
 
 ### Multi-Track Mixer
+
 1. Navigate to `/selector/mixer/`
 2. Select audio source for each track
 3. Adjust EQ (High/Mid/Low) using rotary knobs
@@ -151,13 +181,14 @@ make clean             # Remove generated files
 6. Adjust master output volume
 
 ### Authentication
+
 - Click "Login" to access the login page
 - New users can sign up for an account
 - Guest users can access features without registration
 
 ## Project Structure
 
-```
+```bash
 noise-noise/
 ├── accounts/              # User authentication app
 │   ├── models.py         # CustomUser, GuestSession
@@ -197,7 +228,9 @@ noise-noise/
 ## Configuration
 
 ### Environment Variables
+
 Create a `.env` file:
+
 ```env
 SECRET_KEY=your-secret-key-here
 DATABASE_URL=postgresql://user:pass@host/db
@@ -205,7 +238,9 @@ DEBUG=True
 ```
 
 ### Email Settings
-For production, configure email backend in `settings.py`:
+
+For production, configure bespoke email backend in `settings.py`:
+
 ```python
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -217,16 +252,8 @@ EMAIL_HOST_PASSWORD = 'your-password'
 
 ## Deployment
 
-### Heroku
-1. Install Heroku CLI
-2. Create Heroku app: `heroku create your-app-name`
-3. Add PostgreSQL addon: `heroku addons:create heroku-postgresql:mini`
-4. Set environment variables: `heroku config:set SECRET_KEY=...`
-5. Deploy: `git push heroku main`
-6. Run migrations: `heroku run python manage.py migrate`
-7. Create superuser: `heroku run python manage.py createsuperuser`
-
 ### Production Checklist
+
 - [ ] Set `DEBUG = False`
 - [ ] Configure `ALLOWED_HOSTS`
 - [ ] Set strong `SECRET_KEY`
@@ -261,10 +288,10 @@ For issues, questions or contributions, please open an issue on GitHub.
 
 ## Roadmap
 
-- [ ] Add more noise types (Grey, Velvet, etc.)
+- [ ] Add more noise types (Grey, Velvet, Deep, etc.)
 - [ ] Implement preset saving/loading
 - [ ] Add audio visualization (waveforms, spectrograms)
-- [ ] Mobile app (React Native/Flutter)
+- [ ] Mobile app (React Native, maybe Flutter)
 - [ ] Export mixed audio to file
 - [ ] Spotify/Apple Music integration
 - [ ] Productivity timer integration
@@ -273,4 +300,5 @@ For issues, questions or contributions, please open an issue on GitHub.
 ---
 
 ## Made by
+
 Me. For... better focus and relaxation? Yeah, lets go with that.
