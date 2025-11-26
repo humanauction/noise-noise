@@ -34,7 +34,7 @@ A Django-based web application for generating and mixing colored noise sounds de
 
 ### 🎨 Modern UI/UX
 
-- **DaisyUI Components**: Beautiful, accessible UI components
+- **DaisyUI Components**: UI components
 - **Dark/Light Mode**: Theme switcher for user preference
 - **Responsive Grid Layout**: Optimized for all screen sizes
 - **Smooth Animations**: Hover effects and transitions
@@ -77,7 +77,7 @@ A Django-based web application for generating and mixing colored noise sounds de
 #### 1. Clone the repository
 
 ```bash
-git clone https://www.github.com/humanauction/noise-noise.git
+git clone github.com/humanauction/noise-noise.git
 cd noise-noise
 ```
 
