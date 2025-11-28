@@ -75,7 +75,13 @@ static/css/dist
 static/css/output.css
 static/css/output.css.map
 /staticfiles/
-/static/
-!static/README.md
-!static/audio/
-!static/images/
+
+# Exclude static root but allow specific subdirectories
+/static/*
+!/static/audio/
+!/static/images/
+!/static/js/
+
+# Allow theme static files
+!theme/static/css/dist/
+!/selector/static/selector/audio/
