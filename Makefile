@@ -41,7 +41,7 @@ help:
 # make dev
 
 # List of commands below
-setup: check-venv
+setup: check-venv check-env
     @echo "🔧 Setting up project..."
     @echo "📦 Installing Python dependencies..."
     pip install --upgrade pip
@@ -52,7 +52,7 @@ setup: check-venv
     safety check --json || echo "⚠️ Security issues found - review above"
     @echo "📦 Installing npm dependencies..."
     cd theme/static_src && npm install
-    @echo "🎨 Building Tailwind CSS..."
+    @echo "🎨 Building Tailwind CSS for production..."
     cd theme/static_src && npm run build
     @echo "🗄️ Running migrations..."
     python manage.py migrate
@@ -73,11 +73,12 @@ check-env:
     @if [ ! -f .env ]; then \
         echo "❌ .env file not found!"; \
         echo "Create it with:"; \
+        echo "  cp .env.example .env"; \
+        echo "Or manually:"; \
         echo "  echo 'SECRET_KEY=\"your-secret-key\"' > .env"; \
-        echo "  echo 'DATABASE_URL=your-db-url' >> .env"; \
         exit 1; \
     else \
-        echo "✅ .env file found"; \
+        echo "✅ .env file exists"; \
     fi
 
 
