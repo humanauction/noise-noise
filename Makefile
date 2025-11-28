@@ -42,21 +42,23 @@ help:
 
 # List of commands below
 setup: check-venv
-	@echo "🔧 Setting up project..."
-	@echo "📦 Installing Python dependencies..."
-	pip install --upgrade pip
-	pip install -r requirements.txt
-	@echo "🔒 Checking for security vulnerabilities..."
-	pip check
-	pip install safety
-	safety check --json || echo "⚠️	Security issues found - review above"
-	@echo "📦 Installing npm dependencies..."
-	cd theme/static_src && npm install
-	@echo "🗄️	Running migrations..."
-	python manage.py migrate
-	@echo "📁 Collecting static files..."
-	python manage.py collectstatic --noinput
-	@echo "✅ Setup complete! Run 'make dev' to start."
+    @echo "🔧 Setting up project..."
+    @echo "📦 Installing Python dependencies..."
+    pip install --upgrade pip
+    pip install -r requirements.txt
+    @echo "🔒 Checking for security vulnerabilities..."
+    pip check
+    pip install safety
+    safety check --json || echo "⚠️ Security issues found - review above"
+    @echo "📦 Installing npm dependencies..."
+    cd theme/static_src && npm install
+    @echo "🎨 Building Tailwind CSS..."
+    cd theme/static_src && npm run build
+    @echo "🗄️ Running migrations..."
+    python manage.py migrate
+    @echo "📁 Collecting static files..."
+    python manage.py collectstatic --noinput
+    @echo "✅ Setup complete! Run 'make dev' to start."
 
 check-venv:
 	@if [ -z "$$VIRTUAL_ENV" ]; then \
@@ -66,6 +68,17 @@ check-venv:
 	else \
 		echo "✅ Virtual environment active: $$VIRTUAL_ENV"; \
 	fi
+
+check-env:
+    @if [ ! -f .env ]; then \
+        echo "❌ .env file not found!"; \
+        echo "Create it with:"; \
+        echo "  echo 'SECRET_KEY=\"your-secret-key\"' > .env"; \
+        echo "  echo 'DATABASE_URL=your-db-url' >> .env"; \
+        exit 1; \
+    else \
+        echo "✅ .env file found"; \
+    fi
 
 
 dev: check-venv

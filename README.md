@@ -12,17 +12,20 @@ A Django-based web application for generating and mixing colored noise sounds de
 ### 🎨 Color Noise Generator
 
 - **8 Types of Noise**: White, Pink, Red, Blue, Purple, Yellow, Brown, and Green noise
-- **Interactive Cards**: Click to reveal playback controls
-- **Audio Controls**: Play, pause, loop, and volume adjustment for each noise type
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Interactive Flip Cards**: Click cards to reveal playback controls
+- **Individual Audio Controls**: Play, pause, loop, and volume adjustment for each noise type
+- **Responsive Grid Layout**: Optimized card layout for all screen sizes
+- **Seamless Looping**: For continuous ambient sound
+- **Audio Controls**: Play, pause, loop and volume adjustment
+- **Responsive Design**: Works on desktop and mobile devices
 
 ### 🎚️ Multi-Track Mixer
 
 - **Multi-Track Mixing Console**: Professional-grade audio mixing interface
 - **3-Band EQ**: High, Mid, and Low frequency control per track using rotary sliders
-- **Dynamic Controls**: Solo, Mute, and individual volume faders
+- **Dynamic Controls**: Solo, Mute and individual volume faders
 - **Master Output**: Global volume control with peak metering
-- **Audio Source Selection**: Load different noise types per track
+- **Dynamic Audio Source Selection**: Load any generated noise type into any track
 - **Web Audio API**: Real-time audio processing in the browser
 
 ### 👤 User Authentication
@@ -48,6 +51,7 @@ A Django-based web application for generating and mixing colored noise sounds de
 - **Gunicorn**: WSGI server for production
 - **WhiteNoise**: Static file serving
 - **Django Allauth**: Authentication system
+- **honcho**: Process manager for local development
 
 ### Frontend
 
@@ -77,7 +81,7 @@ A Django-based web application for generating and mixing colored noise sounds de
 #### 1. Clone the repository
 
 ```bash
-git clone github.com/humanauction/noise-noise.git
+git clone https://github.com/humanauction/noise-noise.git
 cd noise-noise
 ```
 
@@ -108,6 +112,7 @@ This will:
 - Install npm dependencies
 - Run security checks
 - Apply database migrations
+- **Build Tailwind CSS**
 - Collect static files
 
 #### 4. Creating a superuser
@@ -116,12 +121,11 @@ This will:
 make createsuperuser
 ```
 
-#### 5. Generate audio files
+#### 5. Audio Files
 
-**Important:** Audio files are gitignored by default. You must generate them locally or on deployment:
+The project includes pre-generated noise files in `static/audio/`. However, if you need to regenerate or add custom durations:
 
 ```bash
-mkdir -p static/audio
 python manage.py generate_noise white static/audio/white.wav --duration 10
 python manage.py generate_noise pink static/audio/pink.wav --duration 10
 python manage.py generate_noise red static/audio/red.wav --duration 10
@@ -130,6 +134,37 @@ python manage.py generate_noise purple static/audio/purple.wav --duration 10
 python manage.py generate_noise yellow static/audio/yellow.wav --duration 10
 python manage.py generate_noise brown static/audio/brown.wav --duration 10
 python manage.py generate_noise green static/audio/green.wav --duration 10
+```
+
+**Available noise types:** white, pink, red, blue, purple, yellow, brown, green
+
+**Note:** The repository includes additional ambient sounds:
+
+- `bathroom-fan.wav`
+- `outskirts-city.wav`
+- `trainstation.wav`
+
+#### 5.5 Git and Static Files
+
+The `.gitignore` excludes `/static/*` to prevent committing generated files. However, audio files are an exception:
+
+```gitignore
+/static/*
+!/static/audio/
+!/static/audio/**
+```
+
+To commit audio files:
+
+```bash
+git add -f static/audio/*.wav
+```
+
+For Tailwind CSS (if rebuilding):
+
+```bash
+cd theme/static_src && npm run build && cd ../..
+git add -f theme/static/css/dist/styles.css
 ```
 
 #### 6. Run the development server
@@ -167,9 +202,11 @@ make clean             # Remove generated files
 ### Noise Selector Page
 
 1. Navigate to `/selector/selector/`
-2. Click on any colored noise card
-3. Use play/pause/loop controls
-4. Adjust volume with the slider
+2. Click on any colored noise card to reveal controls
+3. Use play/pause/loop buttons
+4. Adjust volume with the range slider
+
+**Audio files are loaded from:** `/static/audio/{color}.wav`
 
 ### Multi-Track Mixer
 
@@ -252,6 +289,94 @@ EMAIL_HOST_PASSWORD = 'your-password'
 
 ## Deployment
 
+### Heroku Deployment
+
+#### Prerequisites
+
+- Heroku CLI installed: `brew install heroku/brew/heroku` (macOS)
+- Heroku account created
+
+#### Steps
+
+1. **Login and create app**
+
+```bash
+heroku login
+heroku create your-app-name
+```
+
+2. **Add PostgreSQL**
+
+```bash
+heroku addons:create heroku-postgresql:essential-0
+```
+
+3. **Set environment variables**
+
+```bash
+heroku config:set SECRET_KEY="$(python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')"
+heroku config:set DEBUG=False
+heroku config:set DJANGO_SETTINGS_MODULE=noise_machine.settings
+```
+
+4. **Deploy**
+
+```bash
+git push heroku main
+```
+
+5. **Run migrations and collect static**
+
+```bash
+heroku run python manage.py migrate
+heroku run python manage.py collectstatic --noinput
+```
+
+6. **Create superuser**
+
+```bash
+heroku run python manage.py createsuperuser
+```
+
+7. **Open app**
+
+```bash
+heroku open
+```
+
+#### Troubleshooting
+
+**CSS/JS not loading:**
+
+```bash
+# Rebuild Tailwind locally
+cd theme/static_src && npm run build && cd ../..
+
+# Force add built CSS
+git add -f theme/static/css/dist/styles.css
+
+# Commit and redeploy
+git commit -m "Add built CSS"
+git push heroku main
+heroku run python manage.py collectstatic --noinput
+```
+
+**Audio files missing:**
+
+```bash
+# Force add audio files
+git add -f static/audio/*.wav
+git commit -m "Add audio files"
+git push heroku main
+heroku run python manage.py collectstatic --noinput
+```
+
+**Check logs:**
+
+```bash
+heroku logs --tail
+```
+
 ### Production Checklist
 
 - [ ] Set `DEBUG = False`
@@ -288,13 +413,26 @@ For issues, questions or contributions, please open an issue on GitHub.
 
 ## Roadmap
 
-- [ ] Add more noise types (Grey, Velvet, Deep, etc.)
+### Completed ✅
+
+- [x] 8 colored noise types (white, pink, red, blue, purple, yellow, brown, green)
+- [x] Multi-track mixer with EQ
+- [x] Guest session support
+- [x] Dark/light mode
+
+### In Progress 🚧
+
+- [ ] Audio visualization (waveforms, spectrograms)
+- [ ] Preset saving/loading
+
+### Planned 📋
+
+- [ ] Add more noise types (nature, industrial, etc.)
 - [ ] Implement preset saving/loading
-- [ ] Add audio visualization (waveforms, spectrograms)
 - [ ] Mobile app (React Native, maybe Flutter)
 - [ ] Export mixed audio to file
 - [ ] Spotify/Apple Music integration
-- [ ] Productivity timer integration
+- [ ] Routine timer integration
 - [ ] Sleep timer functionality
 
 ---
@@ -302,3 +440,73 @@ For issues, questions or contributions, please open an issue on GitHub.
 ## Made by
 
 Me. For... better focus and relaxation? Yeah, lets go with that.
+
+<!-- TODO: ## 🌐 Live Demo
+
+**[View Live App →](https://noise-machine-74f044719326.herokuapp.com/)**
+
+Try it now without installing anything!
+
+TODO:## 📸 Screenshots
+
+### Noise Selector
+*[Add screenshot of selector page with colored cards]*
+
+### Multi-Track Mixer
+*[Add screenshot of mixer interface with EQ knobs]*
+
+### Dark Mode
+*[Add screenshot showing theme toggle]* -->
+
+## ⚡ Performance
+
+- **Audio files:** Pre-generated 10-second loops (441KB each)
+- **Web Audio API:** Client-side processing for zero latency
+- **Caching:** WhiteNoise serves static files with aggressive caching
+- **Database:** PostgreSQL on Neon (serverless)
+
+**Tips for best performance:**
+
+- Use headphones for better audio quality
+- Chrome/Edge recommended (best Web Audio API support)
+- Close unused tabs to free memory
+
+### Custom Management Commands
+
+#### Generate Noise
+
+Creates colored noise audio files using FFT and signal processing.
+
+```bash
+python manage.py generate_noise <color> <output_path> --duration <seconds>
+```
+
+**Example:**
+
+```bash
+python manage.py generate_noise pink static/audio/pink.wav --duration 30
+```
+
+**Available colors:**
+
+- `white` - Equal power across all frequencies
+- `pink` - -3dB per octave (1/f noise)
+- `red` / `brown` - -6dB per octave (Brownian noise)
+- `blue` - +3dB per octave
+- `purple` - +6dB per octave
+- `yellow` - Pink + white blend
+- `green` - Bandpass filtered (300-700Hz)
+
+**Implementation:** See `selector/management/commands/generate_noise.py`
+
+## 🙏 Acknowledgments
+
+Special thanks to:
+
+- The Django and Tailwind CSS communities
+- Contributors to NumPy, SciPy, and Web Audio API
+- Early testers and feedback providers
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details
