@@ -42,23 +42,23 @@ help:
 
 # List of commands below
 setup: check-venv check-env
-    @echo "🔧 Setting up project..."
-    @echo "📦 Installing Python dependencies..."
-    pip install --upgrade pip
-    pip install -r requirements.txt
-    @echo "🔒 Checking for security vulnerabilities..."
-    pip check
-    pip install safety
-    safety check --json || echo "⚠️ Security issues found - review above"
-    @echo "📦 Installing npm dependencies..."
-    cd theme/static_src && npm install
-    @echo "🎨 Building Tailwind CSS for production..."
-    cd theme/static_src && npm run build
-    @echo "🗄️ Running migrations..."
-    python manage.py migrate
-    @echo "📁 Collecting static files..."
-    python manage.py collectstatic --noinput
-    @echo "✅ Setup complete! Run 'make dev' to start."
+	@echo "🔧 Setting up project..."
+	@echo "📦 Installing Python dependencies..."
+	pip install --upgrade pip
+	pip install -r requirements.txt
+	@echo "🔒 Checking for security vulnerabilities..."
+	pip check
+	pip install safety
+	safety check --json || echo "⚠️ Security issues found - review above"
+	@echo "📦 Installing npm dependencies..."
+	cd theme/static_src && npm install
+	@echo "🎨 Building Tailwind CSS for production..."
+	cd theme/static_src && npm run build
+	@echo "🗄️ Running migrations..."
+	python manage.py migrate
+	@echo "📁 Collecting static files..."
+	python manage.py collectstatic --noinput
+	@echo "✅ Setup complete! Run 'make dev' to start."
 
 check-venv:
 	@if [ -z "$$VIRTUAL_ENV" ]; then \
@@ -70,16 +70,16 @@ check-venv:
 	fi
 
 check-env:
-    @if [ ! -f .env ]; then \
-        echo "❌ .env file not found!"; \
-        echo "Create it with:"; \
-        echo "  cp .env.example .env"; \
-        echo "Or manually:"; \
-        echo "  echo 'SECRET_KEY=\"your-secret-key\"' > .env"; \
-        exit 1; \
-    else \
-        echo "✅ .env file exists"; \
-    fi
+	@if [ ! -f .env ]; then \
+		echo "❌ .env file not found!"; \
+		echo "Create it with:"; \
+		echo "  cp .env.example .env"; \
+		echo "Or manually:"; \
+		echo "  echo 'SECRET_KEY=\"your-secret-key\"' > .env"; \
+		exit 1; \
+	else \
+		echo "✅ .env file exists"; \
+	fi
 
 
 dev: check-venv
